@@ -1,13 +1,20 @@
+@import url('/fonts/stylesheet.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   html,
   body {
-    @apply dark:bg-trueGray-900;
+    @apply dark:bg-trueGray-900 font-nobel-content;
+  }
+  
+  /* Map bold class to use the bold font */
+  .font-nobel-content.font-bold,
+  .font-bold.font-nobel-content {
+    font-family: 'nobel_content_fontbold', sans-serif;
+    font-weight: normal;
   }
 }
 

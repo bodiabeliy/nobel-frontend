@@ -1,81 +1,105 @@
-import Link from "next/link";
+"use client";
+import { useState } from "react";
 import Image from "next/image";
-import { Container } from "@/components/Container";
 
 interface HeroProps {
   data: {
     heading: string;
-    text: string;
-    cta: {
-      href: string;
-      text: string;
-      external: boolean;
-    };
-    image: {
+    subheading?: string;
+    backgroundImage?: {
       url: string;
       alternativeText: string | null;
-      name: string;
     };
   };
 }
 
 export function Hero({ data }: Readonly<HeroProps>) {
   if (!data) return null;
-  const { heading, text, cta, image } = data;
-  return (
-    <Container className="flex flex-wrap ">
-      <div className="flex items-center w-full lg:w-1/2">
-        <div className="max-w-2xl mb-8">
-          <h1 className="text-4xl font-bold leading-snug tracking-tight text-gray-800 lg:text-4xl lg:leading-tight xl:text-6xl xl:leading-tight dark:text-white">
-            {heading}
-          </h1>
-          <p className="py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl dark:text-gray-300">
-            {text}
-          </p>
+  const { heading, subheading } = data;
+  const [activeTab, setActiveTab] = useState("BUY");
 
-          <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
-            <Link
-              href={cta.href}
-              target={cta.external ? "_blank" : "_self"}
-              rel="noopener"
-              className="px-8 py-4 text-lg font-medium text-center text-white bg-indigo-600 rounded-md "
-            >
-              {cta.text}
-            </Link>
-            <Link
-              href="https://github.com/web3templates/nextly-template/"
-              target="_blank"
-              rel="noopener"
-              className="flex items-center space-x-2 text-gray-500 dark:text-gray-400"
-            >
-              <svg
-                role="img"
-                width="24"
-                height="24"
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
+  return (
+    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image - Responsive */}
+      <div className="absolute inset-0">
+        {/* Light Mode - Desktop */}
+        <Image
+          src="/img/homepage-head-banner-light-mode.webp"
+          alt={heading}
+          fill
+          priority
+          className="object-cover hidden md:block dark:hidden"
+        />
+        {/* Light Mode - Mobile */}
+        <Image
+          src="/img/homepage-head-banner-light-mode-mobile.webp"
+          alt={heading}
+          fill
+          priority
+          className="object-cover block md:hidden dark:hidden"
+        />
+        {/* Dark Mode - Desktop */}
+        <Image
+          src="/img/homepage-head-banner-dark-mode.webp"
+          alt={heading}
+          fill
+          priority
+          className="object-cover hidden md:dark:block"
+        />
+        {/* Dark Mode - Mobile */}
+        <Image
+          src="/img/homepage-head-banner-dark-mode-mobile.webp"
+          alt={heading}
+          fill
+          priority
+          className="object-cover hidden dark:block dark:md:hidden"
+        />
+        <div className="absolute inset-0 bg-black/30 dark:bg-black/50"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center px-4 w-full max-w-5xl mx-auto">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-nobel-title font-bold text-white mb-3 md:mb-4 tracking-wide uppercase">
+          {heading}
+        </h1>
+        {subheading && (
+          <p className="text-base md:text-lg lg:text-xl text-white/95 mb-6 md:mb-8 font-nobel-content">
+            {subheading}
+          </p>
+        )}
+
+        {/* Search Bar */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 max-w-4xl mx-auto">
+          {/* Tabs */}
+          <div className="flex gap-0 mb-6 border-b border-gray-200 dark:border-gray-700">
+            {["BUY", "RENT", "SELL"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 md:px-10 py-3 font-nobel-content text-sm md:text-base uppercase transition-colors relative ${
+                  activeTab === tab
+                    ? "text-nobel-blue dark:text-white font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-nobel-blue dark:after:bg-white"
+                    : "text-gray-600 dark:text-gray-400 hover:text-nobel-blue dark:hover:text-white"
+                }`}
               >
-                <title>GitHub</title>
-                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-              </svg>
-              <span> View on Github</span>
-            </Link>
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Input */}
+          <div className="flex flex-col md:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="City, State, Zip Code or Neighborhood"
+              className="flex-1 px-5 py-3.5 text-base border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nobel-blue font-nobel-content"
+            />
+            <button className="px-8 md:px-10 py-3.5 bg-nobel-blue hover:bg-nobel-blue/90 text-white rounded font-nobel-content text-base font-bold transition-colors whitespace-nowrap">
+              Search
+            </button>
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center w-full lg:w-1/2">
-        <div className="">
-          <Image
-            src={image.url}
-            width={616}
-            height={617}
-            className={"object-cover"}
-            alt={image.alternativeText || "Hero Image"}
-          />
-        </div>
-      </div>
-    </Container>
+    </div>
   );
 }

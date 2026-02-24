@@ -15,11 +15,19 @@ const config: Config = {
     extend: {
       colors: {
         trueGray: colors.neutral,
+        nobel: {
+          blue: '#003366',
+          lightBlue: '#4A90E2',
+          gold: '#DAA520',
+        },
       },
     },
     fontFamily: {
       sans: ["Inter", ...defaultTheme.fontFamily.sans],
       stock: [defaultTheme.fontFamily.sans],
+      'nobel-content': ['nobel_content_fontregular', ...defaultTheme.fontFamily.sans],
+      'nobel-script': ['nobel_script_fontregular', 'cursive'],
+      'nobel-title': ['nobel_title_fontregular', ...defaultTheme.fontFamily.serif],
     },
   },
   variants: {
