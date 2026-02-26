@@ -7,42 +7,6 @@
     },
     "content": [
       {
-        "type": "Navbar",
-        "props": {
-          "logoText": "Nobel Realty Group",
-          "logoUrl": "/img/nobel-logo.png",
-          "logoHref": "/",
-          "links": [
-            {
-              "text": "BUY",
-              "href": "/buy",
-              "isAuth": false
-            },
-            {
-              "text": "RENT",
-              "href": "/rent",
-              "isAuth": false
-            },
-            {
-              "text": "SELL",
-              "href": "/sell",
-              "isAuth": false
-            },
-            {
-              "text": "AGENTS",
-              "href": "/agents",
-              "isAuth": false
-            },
-            {
-              "text": "CONTACT US",
-              "href": "/contact",
-              "isAuth": false
-            }
-          ],
-          "id": "Navbar-756b9bee-6b3f-4156-a102-2af79748745e"
-        }
-      },
-      {
         "type": "Hero",
         "props": {
           "heading": "LOOKING FOR A PLACE YOU LOVE?",

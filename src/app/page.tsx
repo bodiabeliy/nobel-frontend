@@ -11,6 +11,7 @@ import { WhyJoinSection } from "@/components/WhyJoinSection";
 import { ContactSection } from "@/components/ContactSection";
 import { EditorAccessButton } from "@/components/EditorAccessButton";
 import { PuckRenderer } from "@/components/PuckRenderer";
+import { SiteLayout } from "@/components/SiteLayout";
 import { fetchData } from "@/lib/fetch";
 import { getStrapiURL } from "@/lib/utils";
 import qs from "qs";
@@ -118,12 +119,12 @@ export default async function Home() {
   // If Puck data exists and has content, render with Puck
   if (puckData && puckData.content && puckData.content.length > 0) {
     return (
-      <>
+      <SiteLayout>
         <div className="puck-rendered-page">
           <PuckRenderer data={puckData} />
         </div>
         <EditorAccessButton />
-      </>
+      </SiteLayout>
     );
   }
 
@@ -133,7 +134,7 @@ export default async function Home() {
   // Fallback data if Strapi is not available
   if (!data) {
     return (
-      <>
+      <SiteLayout>
         <Hero data={heroFallbackData} />
         <Container>
           <HomeValueSection data={homeValueFallbackData} />
@@ -147,12 +148,12 @@ export default async function Home() {
           <ContactSection data={contactFallbackData} />
         </Container>
         <EditorAccessButton />
-      </>
+      </SiteLayout>
     );
   }
 
   return (
-    <>
+    <SiteLayout>
       {data.Hero && <Hero data={data.Hero} />}
       <Container>
         {data.HomeValueSection && <HomeValueSection data={data.HomeValueSection} />}
@@ -166,7 +167,7 @@ export default async function Home() {
         {data.ContactSection && <ContactSection data={data.ContactSection} />}
       </Container>
       <EditorAccessButton />
-    </>
+    </SiteLayout>
   );
 }
 

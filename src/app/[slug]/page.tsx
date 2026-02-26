@@ -2,6 +2,7 @@ import React from "react";
 import type { PageProps } from "@/types";
 
 import { Container } from "@/components/Container";
+import { SiteLayout } from "@/components/SiteLayout";
 
 const pages = {
   data: [
@@ -34,8 +35,10 @@ export async function generateStaticParams() {
 export default function DynamicPageRoute(props: Readonly<PageProps>) {
   const slug = props.params?.slug;
   return (
-    <Container>
-      <div>Dynamic Page Route: {slug}</div>
-    </Container>
+    <SiteLayout>
+      <Container>
+        <div>Dynamic Page Route: {slug}</div>
+      </Container>
+    </SiteLayout>
   );
 }

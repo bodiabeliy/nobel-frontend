@@ -10,8 +10,6 @@ import { ExperienceSection } from "@/components/ExperienceSection";
 import { MarketsSection } from "@/components/MarketsSection";
 import { WhyJoinSection } from "@/components/WhyJoinSection";
 import { ContactSection } from "@/components/ContactSection";
-import { NavbarClient } from "@/components/NavbarClient";
-import { FooterClient } from "@/components/FooterClient";
 
 // ─── Spacing options ──────────────────────────────────────────────
 const spacingOptions = [
@@ -349,6 +347,7 @@ const HeadingConfig = withLayout({
     return (
       <SectionWrapper>
         <Tag
+          className="text-gray-900 dark:text-white"
           style={{
             display: "block",
             textAlign: align,
@@ -404,8 +403,8 @@ const TextConfig = withLayout({
   render: ({ align, color, text, size, maxWidth }: any) => (
     <SectionWrapper maxWidth={maxWidth || "1280px"}>
       <span
+        className={color === "muted" ? "text-gray-500 dark:text-gray-400" : "text-gray-800 dark:text-gray-200"}
         style={{
-          color: color === "default" ? "inherit" : "var(--puck-color-grey-05, #666)",
           display: "flex",
           textAlign: align,
           width: "100%",
@@ -433,7 +432,7 @@ const RichTextConfig = withLayout({
   },
   render: ({ richtext }: any) => (
     <SectionWrapper>
-      <div style={{ lineHeight: 1.6 }}>{richtext}</div>
+      <div className="text-gray-800 dark:text-gray-200 prose dark:prose-invert max-w-none" style={{ lineHeight: 1.6 }}>{richtext}</div>
     </SectionWrapper>
   ),
 });
@@ -481,12 +480,14 @@ const ButtonConfig = withLayout({
       <div>
         <a
           href={puck.isEditing ? "#" : href}
+          className={isPrimary
+            ? "bg-nobel-blue text-white border-nobel-blue hover:bg-nobel-blue/90"
+            : "bg-transparent text-gray-900 dark:text-white border-gray-900 dark:border-white hover:bg-gray-100 dark:hover:bg-gray-800"
+          }
           style={{
             display: "inline-block",
             ...sizeStyles[size] || sizeStyles.medium,
-            backgroundColor: isPrimary ? "#000" : "transparent",
-            color: isPrimary ? "#fff" : "#000",
-            border: isPrimary ? "2px solid #000" : "2px solid #000",
+            border: "2px solid",
             borderRadius: "4px",
             textDecoration: "none",
             fontWeight: 600,
@@ -532,18 +533,19 @@ const CardConfig = withLayout({
     const isCard = mode === "card";
     return (
       <div
+        className={isCard
+          ? "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm"
+          : ""
+        }
         style={{
           padding: "24px",
           borderRadius: isCard ? "8px" : "0",
-          border: isCard ? "1px solid #e5e7eb" : "none",
-          backgroundColor: isCard ? "#fff" : "transparent",
-          boxShadow: isCard ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
           height: "100%",
         }}
       >
         {icon && <div style={{ fontSize: "32px", marginBottom: "12px" }}>{icon}</div>}
-        <div style={{ fontSize: "18px", fontWeight: 600, marginBottom: "8px" }}>{title}</div>
-        <div style={{ fontSize: "14px", color: "#666", lineHeight: 1.5 }}>{description}</div>
+        <div className="text-gray-900 dark:text-white" style={{ fontSize: "18px", fontWeight: 600, marginBottom: "8px" }}>{title}</div>
+        <div className="text-gray-500 dark:text-gray-400" style={{ fontSize: "14px", lineHeight: 1.5 }}>{description}</div>
       </div>
     );
   },
@@ -598,38 +600,6 @@ const ImageConfig = withLayout({
 // ═══════════════════════════════════════════════════════════════════
 // NOBEL PAGE SECTION COMPONENTS
 // ═══════════════════════════════════════════════════════════════════
-
-const NavbarConfig = {
-  label: "Navbar",
-  fields: {
-    logoText: { type: "text" as const },
-    logoUrl: { type: "text" as const },
-    logoHref: { type: "text" as const },
-    links: {
-      type: "array" as const,
-      arrayFields: {
-        text: { type: "text" as const },
-        href: { type: "text" as const },
-        isAuth: { type: "radio" as const, options: [{ label: "Yes", value: true }, { label: "No", value: false }] },
-      },
-    },
-  },
-  defaultProps: {
-    logoText: "Nobel Realty Group",
-    logoUrl: "/img/nobel-logo.png",
-    logoHref: "/",
-    links: [
-      { text: "BUY", href: "/buy", isAuth: false },
-      { text: "RENT", href: "/rent", isAuth: false },
-      { text: "SELL", href: "/sell", isAuth: false },
-      { text: "AGENTS", href: "/agents", isAuth: false },
-      { text: "CONTACT US", href: "/contact", isAuth: false },
-    ],
-  },
-  render: ({ logoText, logoUrl, logoHref, links }: any) => (
-    <NavbarClient logoText={logoText} logoUrl={logoUrl} logoHref={logoHref} links={links} />
-  ),
-};
 
 const HeroConfig = {
   label: "Hero",
@@ -757,15 +727,19 @@ const ExperienceSectionConfig = {
     text: { type: "textarea" as const, contentEditable: true },
     ctaText: { type: "text" as const },
     ctaLink: { type: "text" as const },
+    imageUrl: { type: "text" as const, label: "Image URL" },
+    imageAlt: { type: "text" as const, label: "Image Alt Text" },
   },
   defaultProps: {
     heading: "ELEVATE YOUR EXPERIENCE",
     text: "Our Concierge And A Nobel Realty Group Real Estate Agent Today",
     ctaText: "CONNECT WITH A CONCIERGE",
     ctaLink: "/concierge",
+    imageUrl: "/img/homepage-find-agent.webp",
+    imageAlt: "Experience",
   },
-  render: ({ heading, text, ctaText, ctaLink }: any) => (
-    <ExperienceSection data={{ heading, text, ctaLink: { href: ctaLink, text: ctaText }, image: { url: "/img/brands/experience.jpg", alternativeText: "Experience" } }} />
+  render: ({ heading, text, ctaText, ctaLink, imageUrl, imageAlt }: any) => (
+    <ExperienceSection data={{ heading, text, ctaLink: { href: ctaLink, text: ctaText }, ...(imageUrl ? { image: { url: imageUrl, alternativeText: imageAlt || null } } : {}) }} />
   ),
 };
 
@@ -805,6 +779,8 @@ const WhyJoinSectionConfig = {
     text: { type: "textarea" as const },
     ctaText: { type: "text" as const },
     ctaLink: { type: "text" as const },
+    imageUrl: { type: "text" as const, label: "Image URL" },
+    imageAlt: { type: "text" as const, label: "Image Alt Text" },
   },
   defaultProps: {
     heading: "WHY JOIN NOBEL REALTY GROUP?",
@@ -812,9 +788,11 @@ const WhyJoinSectionConfig = {
     text: "At NOBEL REALTY GROUP, we offer comprehensive support and coaching.",
     ctaText: "JOIN THE NOBEL REALTY GROUP",
     ctaLink: "/join",
+    imageUrl: "/img/homepage-join-our-team.webp",
+    imageAlt: "Join Us",
   },
-  render: ({ heading, subheading, text, ctaText, ctaLink }: any) => (
-    <WhyJoinSection data={{ heading, subheading, text, ctaLink: { href: ctaLink, text: ctaText }, image: { url: "/img/brands/why-join.jpg", alternativeText: "Why Join" } }} />
+  render: ({ heading, subheading, text, ctaText, ctaLink, imageUrl, imageAlt }: any) => (
+    <WhyJoinSection data={{ heading, subheading, text, ctaLink: { href: ctaLink, text: ctaText }, ...(imageUrl ? { image: { url: imageUrl, alternativeText: imageAlt || null } } : {}) }} />
   ),
 };
 
@@ -830,65 +808,6 @@ const ContactSectionConfig = {
   },
   render: ({ heading, subheading }: any) => (
     <ContactSection data={{ heading, subheading }} />
-  ),
-};
-
-const FooterConfig = {
-  label: "Footer",
-  fields: {
-    logoText: { type: "text" as const },
-    logoUrl: { type: "text" as const },
-    logoHref: { type: "text" as const },
-    description: { type: "textarea" as const },
-    colOneLinks: {
-      type: "array" as const,
-      label: "Column 1 Links",
-      arrayFields: {
-        text: { type: "text" as const },
-        href: { type: "text" as const },
-      },
-    },
-    colTwoLinks: {
-      type: "array" as const,
-      label: "Column 2 Links",
-      arrayFields: {
-        text: { type: "text" as const },
-        href: { type: "text" as const },
-      },
-    },
-    socialHeading: { type: "text" as const },
-    socialLinks: {
-      type: "array" as const,
-      label: "Social Links",
-      arrayFields: {
-        text: { type: "text" as const },
-        href: { type: "text" as const },
-      },
-    },
-  },
-  defaultProps: {
-    logoText: "NOBEL",
-    logoUrl: "/img/logo.svg",
-    logoHref: "/",
-    description: "NOBEL Realty Group - Award-winning real estate services in Florida.",
-    colOneLinks: [
-      { text: "Buy a Home", href: "/buy" },
-      { text: "Sell a Home", href: "/sell" },
-      { text: "Rent a Home", href: "/rent" },
-    ],
-    colTwoLinks: [
-      { text: "Contact", href: "/contact" },
-      { text: "Careers", href: "/careers" },
-    ],
-    socialHeading: "Follow us!",
-    socialLinks: [
-      { text: "Facebook", href: "https://www.facebook.com" },
-      { text: "Instagram", href: "https://www.instagram.com" },
-      { text: "LinkedIn", href: "https://www.linkedin.com" },
-    ],
-  },
-  render: (props: any) => (
-    <FooterClient {...props} />
   ),
 };
 
@@ -933,10 +852,6 @@ const config: Config = {
         "ContactSection",
       ],
     },
-    navigation: {
-      title: "Navigation",
-      components: ["Navbar", "Footer"],
-    },
   },
   components: {
     // Layout
@@ -959,7 +874,6 @@ const config: Config = {
     Card: CardConfig as any,
 
     // Nobel Sections
-    Navbar: NavbarConfig as any,
     Hero: HeroConfig as any,
     HomeValueSection: HomeValueSectionConfig as any,
     StatsSection: StatsSectionConfig as any,
@@ -970,7 +884,6 @@ const config: Config = {
     MarketsSection: MarketsSectionConfig as any,
     WhyJoinSection: WhyJoinSectionConfig as any,
     ContactSection: ContactSectionConfig as any,
-    Footer: FooterConfig as any,
   },
 };
 
