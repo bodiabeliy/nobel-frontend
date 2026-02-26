@@ -9,10 +9,36 @@ import { ExperienceSection } from "@/components/ExperienceSection";
 import { MarketsSection } from "@/components/MarketsSection";
 import { WhyJoinSection } from "@/components/WhyJoinSection";
 import { ContactSection } from "@/components/ContactSection";
+import { EditorAccessButton } from "@/components/EditorAccessButton";
 import { fetchData } from "@/lib/fetch";
 import { getStrapiURL } from "@/lib/utils";
 import qs from "qs";
+import { Render, type Data } from "@puckeditor/core";
+import "@puckeditor/core/puck.css";
+import config from "@/puck.config";
+import fs from "fs";
+import path from "path";
 
+// Load Puck data
+async function loadPuckData(): Promise<Data | null> {
+  try {
+    const dataFilePath = path.join(process.cwd(), "puck-data.json");
+    if (fs.existsSync(dataFilePath)) {
+      const fileContent = fs.readFileSync(dataFilePath, "utf-8");
+      const allData = JSON.parse(fileContent);
+      const pageData = allData["/"];
+      // Only return data if it has content
+      if (pageData && pageData.content && pageData.content.length > 0) {
+        return pageData;
+      }
+    }
+  } catch (error) {
+    console.error("Error loading Puck data:", error);
+  }
+  return null;
+}
+
+// Load Strapi data
 async function loader() {
   const baseUrl = getStrapiURL();
   
@@ -87,6 +113,22 @@ async function loader() {
 }
 
 export default async function Home() {
+  // Try to load Puck data first
+  const puckData = await loadPuckData();
+
+  // If Puck data exists and has content, render with Puck
+  if (puckData && puckData.content && puckData.content.length > 0) {
+    return (
+      <>
+        <div className="puck-rendered-page">
+          <Render config={config} data={puckData} />
+        </div>
+        <EditorAccessButton />
+      </>
+    );
+  }
+
+  // Otherwise, fall back to Strapi content
   const data = await loader();
   
   // Fallback data if Strapi is not available
@@ -105,6 +147,7 @@ export default async function Home() {
           <WhyJoinSection data={whyJoinFallbackData} />
           <ContactSection data={contactFallbackData} />
         </Container>
+        <EditorAccessButton />
       </>
     );
   }
@@ -123,6 +166,7 @@ export default async function Home() {
         {data.WhyJoinSection && <WhyJoinSection data={data.WhyJoinSection} />}
         {data.ContactSection && <ContactSection data={data.ContactSection} />}
       </Container>
+      <EditorAccessButton />
     </>
   );
 }
