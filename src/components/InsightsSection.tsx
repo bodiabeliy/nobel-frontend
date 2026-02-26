@@ -44,15 +44,15 @@ export function InsightsSection({ data }: Readonly<InsightsSectionProps>) {
 
         {/* Insights Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-          {insights.map((insight) => (
+          {insights?.map((insight) => (
             <div 
               key={insight.id} 
               className="group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow bg-white dark:bg-gray-900 cursor-pointer"
             >
               <div className="relative h-48 md:h-56 overflow-hidden">
                 <Image
-                  src={insight.image.url}
-                  alt={insight.image.alternativeText || insight.title}
+                  src={insight?.image?.url}
+                  alt={insight?.image?.alternativeText || insight.title}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-300"
                 />

@@ -1,6 +1,199 @@
 {
   "/": {
-    "content": [],
-    "root": {}
+    "root": {
+      "props": {
+        "title": "Nobel Realty Group"
+      }
+    },
+    "content": [
+      {
+        "type": "Navbar",
+        "props": {
+          "logoText": "Nobel Realty Group",
+          "logoUrl": "/img/nobel-logo.png",
+          "logoHref": "/",
+          "links": [
+            {
+              "text": "BUY",
+              "href": "/buy",
+              "isAuth": false
+            },
+            {
+              "text": "RENT",
+              "href": "/rent",
+              "isAuth": false
+            },
+            {
+              "text": "SELL",
+              "href": "/sell",
+              "isAuth": false
+            },
+            {
+              "text": "AGENTS",
+              "href": "/agents",
+              "isAuth": false
+            },
+            {
+              "text": "CONTACT US",
+              "href": "/contact",
+              "isAuth": false
+            }
+          ],
+          "id": "Navbar-756b9bee-6b3f-4156-a102-2af79748745e"
+        }
+      },
+      {
+        "type": "Hero",
+        "props": {
+          "heading": "LOOKING FOR A PLACE YOU LOVE?",
+          "subheading": "We'll Get You There. Search Over 5 Million Homes for Sale Today",
+          "id": "Hero-14134640-5342-4d3a-83cc-fd133ad44c45"
+        }
+      },
+      {
+        "type": "HomeValueSection",
+        "props": {
+          "heading": "WHAT'S YOUR HOME WORTH?",
+          "subheading": "Get a FREE Instant Competitive Market Analysis",
+          "id": "HomeValueSection-eac037b1-72bb-4ce2-a6de-2f7510718fbe"
+        }
+      },
+      {
+        "type": "StatsSection",
+        "props": {
+          "heading": "YOUR AREA'S DAY MARKET IN A GLANCE",
+          "subheading": "Looking for a new home? Let us summarize properties in your area",
+          "stats": [
+            {
+              "value": "394",
+              "label": "NEW TODAY"
+            },
+            {
+              "value": "23",
+              "label": "PRICE INCREASED"
+            },
+            {
+              "value": "12",
+              "label": "OPEN HOUSE"
+            },
+            {
+              "value": "36",
+              "label": "PRICE REDUCED"
+            },
+            {
+              "value": "62",
+              "label": "BACK ON MARKET"
+            },
+            {
+              "value": "89",
+              "label": "FORECLOSURES"
+            }
+          ],
+          "id": "StatsSection-4796789f-4dae-4020-a1b4-38efd8ec7442"
+        }
+      },
+      {
+        "type": "AdvantageSection",
+        "props": {
+          "heading": "THE NOBEL GROUP ADVANTAGE",
+          "subheading": "Welcome to the Future of Real Estate Buying and Selling",
+          "items": [
+            {
+              "icon": "💼",
+              "heading": "Expert Advice",
+              "text": "Local expertise to connect you with the right home."
+            },
+            {
+              "icon": "🏠",
+              "heading": "Home Ownership Made Easy",
+              "text": "40+ years of experience."
+            },
+            {
+              "icon": "📊",
+              "heading": "Make the Best Deal",
+              "text": "Detailed analysis of market trends."
+            },
+            {
+              "icon": "🎯",
+              "heading": "Stand Out",
+              "text": "Highly personalized listing presentations."
+            }
+          ],
+          "id": "AdvantageSection-87184048-b184-4a55-9195-e322421638f3"
+        }
+      },
+      {
+        "type": "RecommendedProperties",
+        "props": {
+          "heading": "RECOMMENDED FOR YOU",
+          "subheading": "Listings we think you'll love",
+          "id": "RecommendedProperties-d537ef40-0a00-4d4b-bd8d-ee04c02a03a4"
+        }
+      },
+      {
+        "type": "InsightsSection",
+        "props": {
+          "heading": "NOBEL KNOWS INSIGHTS",
+          "subheading": "Explore your real people around your neighborhood",
+          "id": "InsightsSection-913d3b1d-bf95-4b8d-9082-ad7171a1ef60"
+        }
+      },
+      {
+        "type": "ExperienceSection",
+        "props": {
+          "heading": "ELEVATE YOUR EXPERIENCE",
+          "text": "Our Concierge And A Nobel Realty Group Real Estate Agent Today",
+          "ctaText": "CONNECT WITH A CONCIERGE",
+          "ctaLink": "/concierge",
+          "id": "ExperienceSection-ea289b3c-d80b-4694-8edf-c8b81708cbca"
+        }
+      },
+      {
+        "type": "WhyJoinSection",
+        "props": {
+          "heading": "WHY JOIN NOBEL REALTY GROUP?",
+          "subheading": "Award-Winning Buying and Selling",
+          "text": "At NOBEL REALTY GROUP, we offer comprehensive support and coaching.",
+          "ctaText": "JOIN THE NOBEL REALTY GROUP",
+          "ctaLink": "/join",
+          "id": "WhyJoinSection-19d42880-661f-4f48-9137-0c0c5268758d"
+        }
+      },
+      {
+        "type": "MarketsSection",
+        "props": {
+          "heading": "EXPLORE POPULAR REAL ESTATE MARKETS",
+          "subheading": "Learn about real estate by exploring the top local markets",
+          "markets": [
+            {
+              "name": "ATLANTIC BEACH, FL",
+              "href": "/markets/atlantic-beach"
+            },
+            {
+              "name": "FERNANDINA BEACH, FL",
+              "href": "/markets/fernandina-beach"
+            },
+            {
+              "name": "JACKSONVILLE BEACH, FL",
+              "href": "/markets/jacksonville-beach"
+            },
+            {
+              "name": "NEPTUNE BEACH, FL",
+              "href": "/markets/neptune-beach"
+            }
+          ],
+          "id": "MarketsSection-e059a3d8-fc00-43ac-912f-2af032c7c6a9"
+        }
+      },
+      {
+        "type": "ContactSection",
+        "props": {
+          "heading": "CONNECT WITH US",
+          "subheading": "Connect with a Nobel Realty Group Real Estate Agent Today",
+          "id": "ContactSection-080a7a5a-5b43-4bbc-a42f-a8bd8113e4e8"
+        }
+      }
+    ],
+    "zones": {}
   }
 }

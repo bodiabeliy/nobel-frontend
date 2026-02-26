@@ -47,10 +47,10 @@ export function Benefits({ data }: BenefitProps) {
       >
         <div>
           <Image
-            src={image.url}
+            src={image?.url}
             width={521}
             height={521}
-            alt={image.alternativeText || image.name}
+            alt={image?.alternativeText || image?.name}
             className={"object-cover"}
           />
         </div>

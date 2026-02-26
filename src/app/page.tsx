@@ -10,12 +10,11 @@ import { MarketsSection } from "@/components/MarketsSection";
 import { WhyJoinSection } from "@/components/WhyJoinSection";
 import { ContactSection } from "@/components/ContactSection";
 import { EditorAccessButton } from "@/components/EditorAccessButton";
+import { PuckRenderer } from "@/components/PuckRenderer";
 import { fetchData } from "@/lib/fetch";
 import { getStrapiURL } from "@/lib/utils";
 import qs from "qs";
-import { Render, type Data } from "@puckeditor/core";
-import "@puckeditor/core/puck.css";
-import config from "@/puck.config";
+import type { Data } from "@puckeditor/core";
 import fs from "fs";
 import path from "path";
 
@@ -121,7 +120,7 @@ export default async function Home() {
     return (
       <>
         <div className="puck-rendered-page">
-          <Render config={config} data={puckData} />
+          <PuckRenderer data={puckData} />
         </div>
         <EditorAccessButton />
       </>

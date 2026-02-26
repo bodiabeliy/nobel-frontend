@@ -145,172 +145,78 @@ function PuckEditorWithTheme({
   );
 }
 
-// Initial data structure matching the home page
+// Initial data structure - clean start with some demo components
 const getInitialData = (): Data => ({
   content: [
     {
-      type: "Navbar",
+      type: "Heading",
       props: {
-        id: "Navbar-1",
-        logoText: "Nobel Realty Group",
-        logoUrl: "/img/nobel-logo.png",
-        logoHref: "/",
-        links: [
-          { text: "BUY", href: "/buy", isAuth: false },
-          { text: "RENT", href: "/rent", isAuth: false },
-          { text: "SELL", href: "/sell", isAuth: false },
-          { text: "AGENTS", href: "/agents", isAuth: false },
-          { text: "CONTACT US", href: "/contact", isAuth: false },
-        ],
+        id: "heading-1",
+        text: "Welcome to Nobel Realty Group",
+        size: "xxl",
+        align: "center",
+        layout: { padding: "24px", spanCol: 1, spanRow: 1, grow: false },
       },
     },
     {
-      type: "Hero",
+      type: "Text",
       props: {
-        id: "Hero-1",
-        heading: "LOOKING FOR A PLACE YOU LOVE?",
-        subheading: "We'll Get You There. Search Over 5 Million Homes for Sale Today",
+        id: "text-1",
+        text: "Build your page using the component panel on the left. Drag and drop Grid, Flex, Cards, and more.",
+        size: "m",
+        align: "center",
+        color: "muted",
+        layout: { padding: "8px", spanCol: 1, spanRow: 1, grow: false },
       },
     },
     {
-      type: "HomeValueSection",
+      type: "Space",
       props: {
-        id: "HomeValueSection-1",
-        heading: "WHAT'S YOUR HOME WORTH?",
-        subheading: "Get a FREE Instant Competitive Market Analysis",
+        id: "space-1",
+        size: "32px",
+        direction: "vertical",
       },
     },
     {
-      type: "StatsSection",
+      type: "Grid",
       props: {
-        id: "StatsSection-1",
-        heading: "YOUR AREA'S DAY MARKET IN A GLANCE",
-        subheading: "Looking for a new home? Let us summarize properties in your area",
-        stats: [
-          { value: "394", label: "NEW TODAY" },
-          { value: "23", label: "PRICE INCREASED" },
-          { value: "12", label: "OPEN HOUSE" },
-          { value: "36", label: "PRICE REDUCED" },
-          { value: "62", label: "BACK ON MARKET" },
-          { value: "89", label: "FORECLOSURES" },
-        ],
-      },
-    },
-    {
-      type: "AdvantageSection",
-      props: {
-        id: "AdvantageSection-1",
-        heading: "THE NOBEL GROUP ADVANTAGE",
-        subheading: "Welcome to the Future of Real Estate Buying and Selling. Where Technology Meets Realtor!",
+        id: "grid-1",
+        numColumns: 3,
+        gap: 24,
         items: [
           {
-            icon: "💼",
-            heading: "Expert Advice and Perspectives",
-            text: "Take advantage of our local expertise to connect you with the right home.",
+            type: "Card",
+            props: {
+              id: "card-1",
+              title: "Layout Components",
+              description: "Use Grid, Flex, and Space to create responsive layouts",
+              icon: "📐",
+              mode: "card",
+              layout: { padding: "0px", spanCol: 1, spanRow: 1, grow: false },
+            },
           },
           {
-            icon: "🏠",
-            heading: "Local Home Ownership Made Easy",
-            text: "With more than 40 years of experience, our team has a strong local presence.",
+            type: "Card",
+            props: {
+              id: "card-2",
+              title: "Typography",
+              description: "Add Headings, Text blocks, and Rich Text with inline editing",
+              icon: "✏️",
+              mode: "card",
+              layout: { padding: "0px", spanCol: 1, spanRow: 1, grow: false },
+            },
           },
           {
-            icon: "📊",
-            heading: "Make the Best Deal",
-            text: "Our process involves detailed analysis of market trends and conditions.",
+            type: "Card",
+            props: {
+              id: "card-3",
+              title: "Nobel Sections",
+              description: "Use pre-built Nobel page sections like Hero, Stats, and more",
+              icon: "🏠",
+              mode: "card",
+              layout: { padding: "0px", spanCol: 1, spanRow: 1, grow: false },
+            },
           },
-          {
-            icon: "🎯",
-            heading: "Stand Out in the Market",
-            text: "We create highly personalized listing presentations.",
-          },
-        ],
-      },
-    },
-    {
-      type: "RecommendedProperties",
-      props: {
-        id: "RecommendedProperties-1",
-        heading: "RECOMMENDED FOR YOU",
-        subheading: "Listings we think you'll love",
-      },
-    },
-    {
-      type: "InsightsSection",
-      props: {
-        id: "InsightsSection-1",
-        heading: "NOBEL KNOWS INSIGHTS",
-        subheading: "Explore your real people around your neighborhood",
-      },
-    },
-    {
-      type: "ExperienceSection",
-      props: {
-        id: "ExperienceSection-1",
-        heading: "ELEVATE YOUR EXPERIENCE",
-        text: "Our Concierge And A Nobel Realty Group Real Estate Agent Today",
-        ctaText: "CONNECT WITH A CONCIERGE",
-        ctaLink: "/concierge",
-      },
-    },
-    {
-      type: "MarketsSection",
-      props: {
-        id: "MarketsSection-1",
-        heading: "EXPLORE POPULAR REAL ESTATE MARKETS",
-        subheading: "Learn about real estate by exploring the top local markets",
-        markets: [
-          { name: "ATLANTIC BEACH, FL", href: "/markets/atlantic-beach" },
-          { name: "FERNANDINA BEACH, FL", href: "/markets/fernandina-beach" },
-          { name: "JACKSONVILLE BEACH, FL", href: "/markets/jacksonville-beach" },
-          { name: "NEPTUNE BEACH, FL", href: "/markets/neptune-beach" },
-        ],
-      },
-    },
-    {
-      type: "WhyJoinSection",
-      props: {
-        id: "WhyJoinSection-1",
-        heading: "WHY JOIN NOBEL REALTY GROUP?",
-        subheading: "Award-Winning Buying and Selling",
-        text: "At NOBEL REALTY GROUP, we offer comprehensive support and coaching.",
-        ctaText: "JOIN THE NOBEL REALTY GROUP",
-        ctaLink: "/join",
-      },
-    },
-    {
-      type: "ContactSection",
-      props: {
-        id: "ContactSection-1",
-        heading: "CONNECT WITH US",
-        subheading: "Connect with a Nobel Realty Group Real Estate Agent Today",
-      },
-    },
-    {
-      type: "Footer",
-      props: {
-        id: "Footer-1",
-        logoText: "NOBEL",
-        logoUrl: "/img/logo.svg",
-        logoHref: "/",
-        description: "NOBEL Realty Group - Award-winning buying and selling real estate services in Florida.",
-        colOneLinks: [
-          { text: "Buy a Home", href: "/buy" },
-          { text: "Sell a Home", href: "/sell" },
-          { text: "Rent a Home", href: "/rent" },
-          { text: "Our Agents", href: "/agents" },
-          { text: "About Us", href: "/about" },
-        ],
-        colTwoLinks: [
-          { text: "Contact", href: "/contact" },
-          { text: "Careers", href: "/careers" },
-          { text: "Insights", href: "/insights" },
-        ],
-        socialHeading: "Follow us!",
-        socialLinks: [
-          { text: "Facebook", href: "https://www.facebook.com" },
-          { text: "Instagram", href: "https://www.instagram.com" },
-          { text: "LinkedIn", href: "https://www.linkedin.com" },
-          { text: "Twitter", href: "https://www.twitter.com" },
         ],
       },
     },

@@ -45,8 +45,8 @@ export function ExperienceSection({ data }: Readonly<ExperienceSectionProps>) {
           {/* Image */}
           <div className="relative order-1 lg:order-2 h-[300px] md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden shadow-xl">
             <Image
-              src={image.url}
-              alt={image.alternativeText || heading}
+              src={image?.url}
+              alt={image?.alternativeText || heading}
               fill
               className="object-cover"
             />
