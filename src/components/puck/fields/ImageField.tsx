@@ -147,6 +147,7 @@ export function ImageField({ field, name, value, onChange }: ImageFieldProps) {
       {/* Preview */}
       {preview && (
         <div className="mt-2 relative">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
             alt="Preview"

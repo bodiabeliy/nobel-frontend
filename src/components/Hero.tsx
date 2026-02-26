@@ -14,9 +14,9 @@ interface HeroProps {
 }
 
 export function Hero({ data }: Readonly<HeroProps>) {
+  const [activeTab, setActiveTab] = useState("BUY");
   if (!data) return null;
   const { heading, subheading } = data;
-  const [activeTab, setActiveTab] = useState("BUY");
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
