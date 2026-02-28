@@ -11,19 +11,25 @@
   "dependencies": {
     "@headlessui/react": "^2.0.3",
     "@heroicons/react": "^2.1.3",
+    "@medusajs/js-sdk": "latest",
+    "@medusajs/types": "latest",
     "@puckeditor/core": "^0.21.1",
     "@types/qs": "^6.9.15",
+    "aos": "^2.3.4",
+    "framer-motion": "^12.34.3",
     "next": "^15.0.0-rc.0",
     "next-themes": "^0.3.0",
     "qs": "^6.12.1",
     "react": "^19.0.0-rc-04bd67a4-20240924",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.0.0-rc-04bd67a4-20240924",
     "react-hook-form": "^7.51.4",
+    "react-intersection-observer": "^10.0.3",
     "react-social-icons": "^6.16.0",
-    "@medusajs/js-sdk": "latest",
-    "@medusajs/types": "latest"
+    "swiper": "^12.1.2"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

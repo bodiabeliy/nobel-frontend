@@ -7,14 +7,27 @@
     },
     "content": [
       {
-        "type": "ProductGrid",
+        "type": "AnimateWrapper",
         "props": {
-          "heading": "Our Products",
-          "columns": "3",
-          "maxProducts": 6,
-          "showPrice": "yes",
-          "source": "strapi",
-          "id": "ProductGrid-10bc9a3c-e7d8-42bb-a7af-7202968e04c4"
+          "content": [],
+          "animation": "fadeUp",
+          "duration": 0.6,
+          "delay": 0,
+          "easing": "easeOut",
+          "once": "yes",
+          "id": "AnimateWrapper-72381933-7acd-4758-9b7c-f5391e07d529"
+        }
+      },
+      {
+        "type": "AnimateWrapper",
+        "props": {
+          "content": [],
+          "animation": "fadeUp",
+          "duration": 0.6,
+          "delay": 0,
+          "easing": "easeOut",
+          "once": "yes",
+          "id": "AnimateWrapper-16e507c1-0766-41d8-bf4b-4daac4e0d7c5"
         }
       },
       {
@@ -26,11 +39,109 @@
         }
       },
       {
+        "type": "CounterRow",
+        "props": {
+          "counters": [
+            {
+              "end": 500,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Properties Sold"
+            },
+            {
+              "end": 98,
+              "prefix": "",
+              "suffix": "%",
+              "label": "Client Satisfaction"
+            },
+            {
+              "end": 40,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Years Experience"
+            },
+            {
+              "end": 25,
+              "prefix": "$",
+              "suffix": "M",
+              "label": "Total Sales"
+            }
+          ],
+          "columns": "4",
+          "duration": 2.5,
+          "bgColor": "white",
+          "id": "CounterRow-fddfe49d-8674-4443-b8a2-4588f9af8c1f"
+        }
+      },
+      {
         "type": "HomeValueSection",
         "props": {
           "heading": "WHAT'S YOUR HOME WORTH?",
           "subheading": "Get a FREE Instant Competitive Market Analysis",
           "id": "HomeValueSection-eac037b1-72bb-4ce2-a6de-2f7510718fbe"
+        }
+      },
+      {
+        "type": "ProductGrid",
+        "props": {
+          "heading": "Our Products",
+          "columns": "3",
+          "maxProducts": 6,
+          "showPrice": "yes",
+          "source": "medusa",
+          "id": "ProductGrid-10bc9a3c-e7d8-42bb-a7af-7202968e04c4",
+          "resolvedProducts": [
+            {
+              "id": "prod_01KJFWH73Z1E73WYNEBMSGJ6H7",
+              "title": "Nobel Branded Pen Set",
+              "handle": "nobel-pen-set",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Pen+Set",
+              "price": "$19.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZC7ENK9KWSGTE70M7",
+              "title": "Nobel Property Flyer Templates",
+              "handle": "nobel-flyer-templates",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Flyer+Templates",
+              "price": "$49.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZFT1N4GCFS39DPFSP",
+              "title": "Nobel Branded Polo Shirt",
+              "handle": "nobel-polo-shirt",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Polo+Shirt",
+              "price": "$39.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZGK0K8QKQG89X2ER6",
+              "title": "Nobel Branded Cap",
+              "handle": "nobel-cap",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Branded+Cap",
+              "price": "$24.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZHNG522APTR5S0JYN",
+              "title": "Nobel Branded Business Cards",
+              "handle": "nobel-business-cards",
+              "thumbnail": "http://localhost:9000/static/1772278671744-istockphoto-517188688-1024x1024.jpg",
+              "price": "$1.10"
+            }
+          ]
+        },
+        "readOnly": {
+          "resolvedProducts": true
+        }
+      },
+      {
+        "type": "AnimatedCounter",
+        "props": {
+          "end": 1000,
+          "prefix": "",
+          "suffix": "+",
+          "duration": 2.5,
+          "decimals": 0,
+          "label": "Projects Completed",
+          "id": "AnimatedCounter-9b6f93d0-aa7f-43c7-9703-f3447232e521"
         }
       },
       {
@@ -120,6 +231,8 @@
           "text": "Our Concierge And A Nobel Realty Group Real Estate Agent Today",
           "ctaText": "CONNECT WITH A CONCIERGE",
           "ctaLink": "/concierge",
+          "imageUrl": "/img/homepage-find-agent.webp",
+          "imageAlt": "Experience",
           "id": "ExperienceSection-ea289b3c-d80b-4694-8edf-c8b81708cbca"
         }
       },
@@ -131,6 +244,8 @@
           "text": "At NOBEL REALTY GROUP, we offer comprehensive support and coaching.",
           "ctaText": "JOIN THE NOBEL REALTY GROUP",
           "ctaLink": "/join",
+          "imageUrl": "/img/homepage-join-our-team.webp",
+          "imageAlt": "Join Us",
           "id": "WhyJoinSection-19d42880-661f-4f48-9137-0c0c5268758d"
         }
       },
