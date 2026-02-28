@@ -17,6 +17,6 @@ export async function fetchData(url: string, authToken?: string) {
     return flattenAttributes(data);
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // or return null;
+    return null;
   }
 }
