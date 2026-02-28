@@ -8,13 +8,82 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ThemeProvider, useTheme } from "next-themes";
 
+// Editable pages
+const PAGES = [
+  { path: "/", label: "Home" },
+  { path: "/buy", label: "Buy" },
+  { path: "/rent", label: "Rent" },
+  { path: "/sell", label: "Sell" },
+  { path: "/agents", label: "Agents" },
+  { path: "/contact", label: "Contact" },
+  { path: "/blog", label: "Blog" },
+];
+
+// Page selector toolbar
+function PageSelector({
+  currentPath,
+  onChangePath,
+}: {
+  currentPath: string;
+  onChangePath: (p: string) => void;
+}) {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 99999,
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        background: "#1a1a2e",
+        padding: "6px 16px",
+        borderRadius: "0 0 10px 10px",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+      }}
+    >
+      <label
+        style={{ color: "#aaa", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" }}
+      >
+        Page:
+      </label>
+      <select
+        value={currentPath}
+        onChange={(e) => onChangePath(e.target.value)}
+        style={{
+          background: "#16213e",
+          color: "#fff",
+          border: "1px solid #0f3460",
+          borderRadius: 6,
+          padding: "4px 8px",
+          fontSize: 13,
+          cursor: "pointer",
+          outline: "none",
+        }}
+      >
+        {PAGES.map((p) => (
+          <option key={p.path} value={p.path}>
+            {p.label} ({p.path})
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 // Wrapper component to access theme context
 function PuckEditorWithTheme({ 
   data, 
-  handlePublish 
+  handlePublish,
+  currentPath,
+  onChangePath,
 }: { 
   data: Data | null; 
-  handlePublish: (data: Data) => Promise<void> 
+  handlePublish: (data: Data) => Promise<void>;
+  currentPath: string;
+  onChangePath: (p: string) => void;
 }) {
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -135,6 +204,7 @@ function PuckEditorWithTheme({
         }
       `}</style>
       <div className="h-screen">
+        <PageSelector currentPath={currentPath} onChangePath={onChangePath} />
         <Puck
           config={config}
           data={data || { content: [], root: {} }}
@@ -311,7 +381,15 @@ export default function EditorPage() {
 
   return (
     <ThemeProvider attribute="class">
-      <PuckEditorWithTheme data={data} handlePublish={handlePublish} />
+      <PuckEditorWithTheme
+        data={data}
+        handlePublish={handlePublish}
+        currentPath={path}
+        onChangePath={(p) => {
+          setLoading(true);
+          setPath(p);
+        }}
+      />
     </ThemeProvider>
   );
 }

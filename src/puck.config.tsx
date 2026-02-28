@@ -805,13 +805,45 @@ const ContactSectionConfig = {
   fields: {
     heading: { type: "text" as const, contentEditable: true },
     subheading: { type: "textarea" as const, contentEditable: true },
+    firstNameLabel: { type: "text" as const, label: "First Name Label" },
+    lastNameLabel: { type: "text" as const, label: "Last Name Label" },
+    emailLabel: { type: "text" as const, label: "Email Label" },
+    phoneLabel: { type: "text" as const, label: "Phone Label" },
+    messageLabel: { type: "text" as const, label: "Message Label" },
+    buttonText: { type: "text" as const, label: "Submit Button Text" },
+    firstNamePlaceholder: { type: "text" as const, label: "First Name Placeholder" },
+    lastNamePlaceholder: { type: "text" as const, label: "Last Name Placeholder" },
+    emailPlaceholder: { type: "text" as const, label: "Email Placeholder" },
+    phonePlaceholder: { type: "text" as const, label: "Phone Placeholder" },
+    messagePlaceholder: { type: "text" as const, label: "Message Placeholder" },
   },
   defaultProps: {
     heading: "CONNECT WITH US",
     subheading: "Connect with a Nobel Realty Group Real Estate Agent Today",
+    firstNameLabel: "First Name*",
+    lastNameLabel: "Last Name*",
+    emailLabel: "Email*",
+    phoneLabel: "Phone Number",
+    messageLabel: "Message*",
+    buttonText: "Send Message",
+    firstNamePlaceholder: "",
+    lastNamePlaceholder: "",
+    emailPlaceholder: "",
+    phonePlaceholder: "",
+    messagePlaceholder: "",
   },
-  render: ({ heading, subheading }: any) => (
-    <ContactSection data={{ heading, subheading }} />
+  render: ({
+    heading, subheading,
+    firstNameLabel, lastNameLabel, emailLabel, phoneLabel, messageLabel,
+    buttonText,
+    firstNamePlaceholder, lastNamePlaceholder, emailPlaceholder, phonePlaceholder, messagePlaceholder,
+  }: any) => (
+    <ContactSection data={{
+      heading, subheading,
+      firstNameLabel, lastNameLabel, emailLabel, phoneLabel, messageLabel,
+      buttonText,
+      firstNamePlaceholder, lastNamePlaceholder, emailPlaceholder, phonePlaceholder, messagePlaceholder,
+    }} />
   ),
 };
 
@@ -1363,11 +1395,267 @@ const ImageCarouselConfig = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// SITE-WIDE / GLOBAL COMPONENTS (Navbar, Footer)
+// ═══════════════════════════════════════════════════════════════════
+
+const NavbarConfig = {
+  label: "Navbar",
+  fields: {
+    logoText: { type: "text" as const, label: "Logo Text" },
+    logoImageUrl: { type: "text" as const, label: "Logo Image URL" },
+    logoHref: { type: "text" as const, label: "Logo Link" },
+    links: {
+      type: "array" as const,
+      label: "Nav Links",
+      arrayFields: {
+        text: { type: "text" as const, label: "Link Text" },
+        href: { type: "text" as const, label: "Link URL" },
+      },
+    },
+    ctaText: { type: "text" as const, label: "CTA Button Text" },
+    ctaHref: { type: "text" as const, label: "CTA Button Link" },
+    showCta: {
+      type: "radio" as const,
+      label: "Show CTA",
+      options: [
+        { label: "Yes", value: "yes" },
+        { label: "No", value: "no" },
+      ],
+    },
+  },
+  defaultProps: {
+    logoText: "Nobel Realty Group",
+    logoImageUrl: "/img/nobel-logo.png",
+    logoHref: "/",
+    links: [
+      { text: "BUY", href: "/buy" },
+      { text: "RENT", href: "/rent" },
+      { text: "SELL", href: "/sell" },
+      { text: "AGENTS", href: "/agents" },
+      { text: "CONTACT US", href: "/contact" },
+    ],
+    ctaText: "Get Started",
+    ctaHref: "#",
+    showCta: "no",
+  },
+  render: ({ logoText, logoImageUrl, logoHref, links, ctaText, ctaHref, showCta }: any) => (
+    <div className="w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+      <nav className="container relative flex items-center justify-between px-4 py-2 mx-auto max-w-screen-xl" style={{ maxHeight: "50px" }}>
+        <a href={logoHref || "/"} className="flex items-center space-x-2 text-lg font-medium text-gray-900 dark:text-gray-100">
+          {logoImageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoImageUrl} alt={logoText} className="h-8 w-auto" />
+          )}
+          <span className="font-nobel-title text-nobel-blue dark:text-white">{logoText}</span>
+        </a>
+        <div className="flex items-center space-x-1">
+          {(links || []).map((link: any, i: number) => (
+            <a
+              key={i}
+              href={link.href}
+              className="inline-block px-3 py-2 text-sm font-nobel-content font-bold text-gray-800 no-underline uppercase dark:text-gray-200 hover:text-nobel-blue"
+            >
+              {link.text}
+            </a>
+          ))}
+          {showCta === "yes" && ctaText && (
+            <a
+              href={ctaHref || "#"}
+              className="ml-2 px-4 py-1.5 text-sm font-nobel-content font-bold text-white bg-nobel-blue rounded hover:bg-nobel-blue/90"
+            >
+              {ctaText}
+            </a>
+          )}
+        </div>
+      </nav>
+    </div>
+  ),
+};
+
+const FooterConfig = {
+  label: "Footer",
+  fields: {
+    description: { type: "textarea" as const, label: "Footer Description", contentEditable: true },
+    logoText: { type: "text" as const, label: "Logo Text" },
+    logoImageUrl: { type: "text" as const, label: "Logo Image URL" },
+    logoHref: { type: "text" as const, label: "Logo Link" },
+    colOneHeading: { type: "text" as const, label: "Column 1 Heading" },
+    colOneLinks: {
+      type: "array" as const,
+      label: "Column 1 Links",
+      arrayFields: {
+        text: { type: "text" as const },
+        href: { type: "text" as const },
+      },
+    },
+    colTwoHeading: { type: "text" as const, label: "Column 2 Heading" },
+    colTwoLinks: {
+      type: "array" as const,
+      label: "Column 2 Links",
+      arrayFields: {
+        text: { type: "text" as const },
+        href: { type: "text" as const },
+      },
+    },
+    socialHeading: { type: "text" as const, label: "Social Section Heading" },
+    socialLinks: {
+      type: "array" as const,
+      label: "Social Links",
+      arrayFields: {
+        text: { type: "text" as const, label: "Platform Name" },
+        href: { type: "text" as const, label: "URL" },
+      },
+    },
+    copyrightText: { type: "text" as const, label: "Copyright Text" },
+  },
+  defaultProps: {
+    description: "NOBEL Realty Group - Award-winning buying and selling real estate services in Florida.",
+    logoText: "NOBEL",
+    logoImageUrl: "/img/logo.svg",
+    logoHref: "/",
+    colOneHeading: "",
+    colOneLinks: [
+      { text: "Buy a Home", href: "/buy" },
+      { text: "Sell a Home", href: "/sell" },
+      { text: "Rent a Home", href: "/rent" },
+      { text: "Our Agents", href: "/agents" },
+      { text: "About Us", href: "/about" },
+    ],
+    colTwoHeading: "",
+    colTwoLinks: [
+      { text: "Contact", href: "/contact" },
+      { text: "Careers", href: "/careers" },
+      { text: "Insights", href: "/insights" },
+    ],
+    socialHeading: "Follow us!",
+    socialLinks: [
+      { text: "Facebook", href: "https://www.facebook.com" },
+      { text: "Instagram", href: "https://www.instagram.com" },
+      { text: "LinkedIn", href: "https://www.linkedin.com" },
+      { text: "Twitter", href: "https://www.twitter.com" },
+    ],
+    copyrightText: "",
+  },
+  render: ({
+    description, logoText, logoImageUrl, logoHref,
+    colOneLinks, colTwoLinks,
+    socialHeading, socialLinks,
+    copyrightText,
+  }: any) => (
+    <div className="relative bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 max-w-screen-xl">
+        <div className="grid grid-cols-1 gap-10 pt-10 mt-5 border-t border-gray-200 dark:border-gray-700 lg:grid-cols-5">
+          <div className="lg:col-span-2">
+            <a href={logoHref || "/"} className="flex items-center space-x-2 text-2xl font-nobel-title font-medium text-nobel-blue dark:text-white">
+              {logoImageUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={logoImageUrl} alt={logoText} className="w-8 h-8" />
+              )}
+              <span>{logoText}</span>
+            </a>
+            <div className="max-w-md mt-4 text-gray-600 dark:text-gray-400 font-nobel-content">
+              {description}
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-wrap w-full -mt-2 -ml-3 lg:ml-0">
+              {(colOneLinks || []).map((item: any, i: number) => (
+                <a key={i} href={item.href} className="w-full px-4 py-2 text-gray-600 dark:text-gray-300 font-nobel-content rounded-md hover:text-nobel-blue">
+                  {item.text}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-wrap w-full -mt-2 -ml-3 lg:ml-0">
+              {(colTwoLinks || []).map((item: any, i: number) => (
+                <a key={i} href={item.href} className="w-full px-4 py-2 text-gray-600 dark:text-gray-300 font-nobel-content rounded-md hover:text-nobel-blue">
+                  {item.text}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="font-nobel-content-bold text-gray-900 dark:text-white">{socialHeading}</div>
+            <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
+              {(socialLinks || []).map((item: any, i: number) => (
+                <a key={i} href={item.href} target="_blank" rel="noreferrer" className="hover:text-nobel-blue" title={item.text}>
+                  <span className="text-sm">{item.text}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="my-10 text-sm text-center text-gray-600 dark:text-gray-400 font-nobel-content">
+          {copyrightText || `Copyright © ${new Date().getFullYear()} NOBEL Realty Group. All rights reserved.`}
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+// ═══════════════════════════════════════════════════════════════════
 // CONFIG EXPORT
 // ═══════════════════════════════════════════════════════════════════
 
 const config: Config = {
+  root: {
+    fields: {
+      title: { type: "text" as const, label: "Page Title" },
+      // Navbar overrides (global)
+      navLogoText: { type: "text" as const, label: "Navbar: Logo Text" },
+      navLogoImage: { type: "text" as const, label: "Navbar: Logo Image URL" },
+      navLinks: {
+        type: "array" as const,
+        label: "Navbar: Navigation Links",
+        arrayFields: {
+          text: { type: "text" as const, label: "Link Text" },
+          href: { type: "text" as const, label: "Link URL" },
+        },
+      },
+      navCtaText: { type: "text" as const, label: "Navbar: CTA Button Text" },
+      navCtaHref: { type: "text" as const, label: "Navbar: CTA Button Link" },
+      // Footer overrides (global)
+      footerDescription: { type: "textarea" as const, label: "Footer: Description" },
+      footerLogoText: { type: "text" as const, label: "Footer: Logo Text" },
+      footerLogoImage: { type: "text" as const, label: "Footer: Logo Image URL" },
+      footerColOneLinks: {
+        type: "array" as const,
+        label: "Footer: Column 1 Links",
+        arrayFields: {
+          text: { type: "text" as const },
+          href: { type: "text" as const },
+        },
+      },
+      footerColTwoLinks: {
+        type: "array" as const,
+        label: "Footer: Column 2 Links",
+        arrayFields: {
+          text: { type: "text" as const },
+          href: { type: "text" as const },
+        },
+      },
+      footerSocialHeading: { type: "text" as const, label: "Footer: Social Heading" },
+      footerSocialLinks: {
+        type: "array" as const,
+        label: "Footer: Social Links",
+        arrayFields: {
+          text: { type: "text" as const, label: "Platform" },
+          href: { type: "text" as const, label: "URL" },
+        },
+      },
+      footerCopyright: { type: "text" as const, label: "Footer: Copyright Text" },
+    },
+    defaultProps: {
+      title: "Nobel Realty Group",
+    },
+    render: ({ children }: any) => <>{children}</>,
+  },
   categories: {
+    sitewide: {
+      title: "Site-wide",
+      components: ["Navbar", "Footer"],
+    },
     layout: {
       title: "Layout",
       components: ["Grid", "Flex", "Space"],
@@ -1423,6 +1711,10 @@ const config: Config = {
     },
   },
   components: {
+    // Site-wide
+    Navbar: NavbarConfig as any,
+    Footer: FooterConfig as any,
+
     // Layout
     Grid: GridConfig as any,
     Flex: FlexConfig as any,

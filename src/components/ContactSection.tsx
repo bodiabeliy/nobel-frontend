@@ -5,6 +5,17 @@ interface ContactSectionProps {
   data: {
     heading: string;
     subheading?: string;
+    firstNameLabel?: string;
+    lastNameLabel?: string;
+    emailLabel?: string;
+    phoneLabel?: string;
+    messageLabel?: string;
+    buttonText?: string;
+    firstNamePlaceholder?: string;
+    lastNamePlaceholder?: string;
+    emailPlaceholder?: string;
+    phonePlaceholder?: string;
+    messagePlaceholder?: string;
   };
 }
 
@@ -24,7 +35,21 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
   };
 
   if (!data) return null;
-  const { heading, subheading } = data;
+  const {
+    heading,
+    subheading,
+    firstNameLabel = "First Name*",
+    lastNameLabel = "Last Name*",
+    emailLabel = "Email*",
+    phoneLabel = "Phone Number",
+    messageLabel = "Message*",
+    buttonText = "Send Message",
+    firstNamePlaceholder = "",
+    lastNamePlaceholder = "",
+    emailPlaceholder = "",
+    phonePlaceholder = "",
+    messagePlaceholder = "",
+  } = data;
 
   return (
     <div className="bg-gray-50 dark:bg-gray-800 py-12 md:py-16 lg:py-20">
@@ -45,11 +70,12 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
             <div>
               <label className="block text-gray-700 dark:text-gray-300 font-nobel-content text-sm md:text-base mb-2">
-                First Name*
+                {firstNameLabel}
               </label>
               <input
                 type="text"
                 required
+                placeholder={firstNamePlaceholder}
                 value={formData.firstName}
                 onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                 className="w-full px-4 py-3 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-nobel-blue"
@@ -57,11 +83,12 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
             </div>
             <div>
               <label className="block text-gray-700 dark:text-gray-300 font-nobel-content text-sm md:text-base mb-2">
-                Last Name*
+                {lastNameLabel}
               </label>
               <input
                 type="text"
                 required
+                placeholder={lastNamePlaceholder}
                 value={formData.lastName}
                 onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                 className="w-full px-4 py-3 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-nobel-blue"
@@ -72,11 +99,12 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
             <div>
               <label className="block text-gray-700 dark:text-gray-300 font-nobel-content text-sm md:text-base mb-2">
-                Email*
+                {emailLabel}
               </label>
               <input
                 type="email"
                 required
+                placeholder={emailPlaceholder}
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 className="w-full px-4 py-3 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-nobel-blue"
@@ -84,10 +112,11 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
             </div>
             <div>
               <label className="block text-gray-700 dark:text-gray-300 font-nobel-content text-sm md:text-base mb-2">
-                Phone Number
+                {phoneLabel}
               </label>
               <input
                 type="tel"
+                placeholder={phonePlaceholder}
                 value={formData.phone}
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 className="w-full px-4 py-3 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-nobel-blue"
@@ -97,11 +126,12 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
 
           <div className="mb-6">
             <label className="block text-gray-700 dark:text-gray-300 font-nobel-content text-sm md:text-base mb-2">
-              Message*
+              {messageLabel}
             </label>
             <textarea
               required
               rows={6}
+              placeholder={messagePlaceholder}
               value={formData.message}
               onChange={(e) => setFormData({...formData, message: e.target.value})}
               className="w-full px-4 py-3 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-nobel-blue"
@@ -113,7 +143,7 @@ export function ContactSection({ data }: Readonly<ContactSectionProps>) {
               type="submit"
               className="px-8 md:px-12 py-3 bg-nobel-blue hover:bg-nobel-blue/90 text-white rounded font-nobel-content text-sm md:text-base font-bold transition-colors"
             >
-              Send Message
+              {buttonText}
             </button>
           </div>
         </form>

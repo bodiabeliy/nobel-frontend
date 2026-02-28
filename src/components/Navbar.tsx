@@ -2,7 +2,8 @@ import Link from "next/link";
 import ThemeChanger from "./DarkSwitch";
 import { DisclosureClient } from "@/components/DisclosureClient";
 import { fetchData } from "@/lib/fetch";
-import { getStrapiURL } from "@/lib/utils";
+import { getStrapiURL, getStrapiMedia } from "@/lib/utils";
+import { getPuckGlobals } from "@/lib/puck-globals";
 import qs from "qs";
 
 async function loader() {
@@ -67,6 +68,7 @@ interface NavbarData {
 
 export async function Navbar() {
   const data = await loader() as NavbarData;
+  const puckGlobals = getPuckGlobals();
   
   // Fallback data if Strapi is not available
   const fallbackData = {
@@ -98,8 +100,27 @@ export async function Navbar() {
   const navLogo = navbar.NavLogo;
   const navLinks = navbar.NavLinks;
 
-  // Filter authenticated links if needed (you can adjust this logic)
-  const navigation = navLinks || [];
+  // Apply Puck global overrides (if editor has set them)
+  const finalLogoText = puckGlobals.navLogoText || navLogo.LogoText;
+  const finalLogoImage = puckGlobals.navLogoImage || getStrapiMedia(navLogo.LogoImage?.url) || "/img/nobel-logo.png";
+  const finalLogoHref = navLogo.href || "/";
+  
+  const finalNavLinks = puckGlobals.navLinks && puckGlobals.navLinks.length > 0
+    ? puckGlobals.navLinks.map((link, i) => ({
+        id: i + 1,
+        LinkText: link.text,
+        href: link.href,
+        isAuth: false,
+      }))
+    : navLinks;
+
+  const finalCtaText = puckGlobals.navCtaText || (navLinks.find(link => link.isAuth)?.LinkText) || "Get Started";
+  const finalCtaHref = puckGlobals.navCtaHref || (navLinks.find(link => link.isAuth)?.href) || "#";
+  const hasCtaFromPuck = !!(puckGlobals.navCtaText && puckGlobals.navCtaHref);
+  const hasCtaFromStrapi = !!navLinks.find(link => link.isAuth);
+
+  // Filter authenticated links if needed
+  const navigation = finalNavLinks || [];
 
   return (
     <div className="w-full border-b border-gray-200 dark:border-gray-800">
@@ -107,33 +128,24 @@ export async function Navbar() {
         {/* Logo  */}
 
         <DisclosureClient topnav={{
-          // id: navbar.id,
           logoLink: {
-            // id: navLogo.id,
-            text: navLogo.LogoText,
-            href: navLogo.href,
+            text: finalLogoText,
+            href: finalLogoHref,
             image: {
-              // id: navLogo.LogoImage?.id,
-              url: navLogo.LogoImage?.url,
+              url: finalLogoImage,
               alternativeText: navLogo.LogoImage?.alternativeText,
               name: navLogo.LogoImage?.name
             }
           },
-          link: navLinks.map(link => ({
+          link: finalNavLinks.map(link => ({
             id: link.id,
             href: link.href,
             text: link.LinkText,
             external: false
           })),
-          cta: navLinks.find(link => link.isAuth) ? {
-            // id: navLinks.find(link => link.isAuth)!.id,
-            href: navLinks.find(link => link.isAuth)!.href,
-            text: navLinks.find(link => link.isAuth)!.LinkText,
-            external: false
-          } : {
-            // id: 0,
-            href: '#',
-            text: 'Get Started',
+          cta: {
+            href: finalCtaHref,
+            text: finalCtaText,
             external: false
           }
         }} />
@@ -155,12 +167,12 @@ export async function Navbar() {
         </div>
 
         <div className="hidden space-x-3 lg:flex lg:items-center nav__item">
-          {navLinks.find(link => link.isAuth) && (
+          {(hasCtaFromPuck || hasCtaFromStrapi) && (
             <Link
-              href={navLinks.find(link => link.isAuth)!.href}
+              href={finalCtaHref}
               className="px-4 py-1.5 text-sm font-nobel-content font-bold text-white bg-nobel-blue rounded hover:bg-nobel-blue/90"
             >
-              {navLinks.find(link => link.isAuth)!.LinkText}
+              {finalCtaText}
             </Link>
           )}
           <ThemeChanger />

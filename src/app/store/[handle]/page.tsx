@@ -25,8 +25,24 @@ async function getProduct(handle: string) {
       headers["x-publishable-api-key"] = publishableKey;
     }
 
+    // Get region for pricing context
+    let regionId = "";
+    try {
+      const regRes = await fetch(`${medusaUrl}/store/regions`, { headers });
+      if (regRes.ok) {
+        const regData = await regRes.json();
+        regionId = regData.regions?.[0]?.id || "";
+      }
+    } catch { /* ignore */ }
+
+    const params = new URLSearchParams({
+      handle,
+      fields: "+variants.calculated_price,+images,+categories,+collection,+tags",
+    });
+    if (regionId) params.set("region_id", regionId);
+
     const res = await fetch(
-      `${medusaUrl}/store/products?handle=${handle}&fields=+variants.prices,+images,+categories,+collection,+tags`,
+      `${medusaUrl}/store/products?${params.toString()}`,
       { headers, next: { revalidate: 60 } }
     );
     if (res.ok) {

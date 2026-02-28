@@ -31,14 +31,6 @@
         }
       },
       {
-        "type": "Hero",
-        "props": {
-          "heading": "LOOKING FOR A PLACE YOU LOVE?",
-          "subheading": "We'll Get You There. Search Over 5 Million Homes for Sale Today",
-          "id": "Hero-14134640-5342-4d3a-83cc-fd133ad44c45"
-        }
-      },
-      {
         "type": "CounterRow",
         "props": {
           "counters": [
@@ -71,6 +63,14 @@
           "duration": 2.5,
           "bgColor": "white",
           "id": "CounterRow-fddfe49d-8674-4443-b8a2-4588f9af8c1f"
+        }
+      },
+      {
+        "type": "Hero",
+        "props": {
+          "heading": "LOOKING FOR A PLACE YOU LOVE?",
+          "subheading": "We'll Get You There. Search Over 5 Million Homes for Sale Today",
+          "id": "Hero-14134640-5342-4d3a-83cc-fd133ad44c45"
         }
       },
       {
@@ -281,6 +281,206 @@
           "heading": "CONNECT WITH US",
           "subheading": "Connect with a Nobel Realty Group Real Estate Agent Today",
           "id": "ContactSection-080a7a5a-5b43-4bbc-a42f-a8bd8113e4e8"
+        }
+      }
+    ],
+    "zones": {}
+  },
+  "/buy": {
+    "root": {
+      "props": {
+        "title": "Nobel Realty Group"
+      }
+    },
+    "content": [
+      {
+        "type": "Heading",
+        "props": {
+          "id": "heading-1",
+          "text": "Welcome to Nobel Realty Group",
+          "size": "xxl",
+          "align": "center",
+          "layout": {
+            "padding": "24px",
+            "spanCol": 1,
+            "spanRow": 1,
+            "grow": false
+          }
+        }
+      },
+      {
+        "type": "Grid",
+        "props": {
+          "items": [],
+          "numColumns": 4,
+          "gap": 24,
+          "id": "Grid-18ee5100-604e-4fae-aadf-051b8f5f0ecc"
+        }
+      },
+      {
+        "type": "Grid",
+        "props": {
+          "items": [],
+          "numColumns": 4,
+          "gap": 24,
+          "id": "Grid-8bfe8850-7648-4444-a3f1-686d88801754"
+        }
+      },
+      {
+        "type": "Text",
+        "props": {
+          "id": "text-1",
+          "text": "Build your page using the component panel on the left. Drag and drop Grid, Flex, Cards, and more.",
+          "size": "m",
+          "align": "center",
+          "color": "muted",
+          "layout": {
+            "padding": "8px",
+            "spanCol": 1,
+            "spanRow": 1,
+            "grow": false
+          }
+        }
+      },
+      {
+        "type": "Space",
+        "props": {
+          "id": "space-1",
+          "size": "32px",
+          "direction": "vertical"
+        }
+      },
+      {
+        "type": "Grid",
+        "props": {
+          "items": [
+            {
+              "type": "Card",
+              "props": {
+                "id": "card-1",
+                "title": "Layout Components",
+                "description": "Use Grid, Flex, and Space to create responsive layouts",
+                "icon": "📐",
+                "mode": "card",
+                "layout": {
+                  "padding": "0px",
+                  "spanCol": 1,
+                  "spanRow": 1,
+                  "grow": false
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "props": {
+                "id": "card-2",
+                "title": "Typography",
+                "description": "Add Headings, Text blocks, and Rich Text with inline editing",
+                "icon": "✏️",
+                "mode": "card",
+                "layout": {
+                  "padding": "0px",
+                  "spanCol": 1,
+                  "spanRow": 1,
+                  "grow": false
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "props": {
+                "id": "card-3",
+                "title": "Nobel Sections",
+                "description": "Use pre-built Nobel page sections like Hero, Stats, and more",
+                "icon": "🏠",
+                "mode": "card",
+                "layout": {
+                  "padding": "0px",
+                  "spanCol": 1,
+                  "spanRow": 1,
+                  "grow": false
+                }
+              }
+            }
+          ],
+          "id": "grid-1",
+          "numColumns": 3,
+          "gap": 24
+        }
+      },
+      {
+        "type": "AnimateWrapper",
+        "props": {
+          "content": [],
+          "animation": "fadeUp",
+          "duration": 2,
+          "delay": 0,
+          "easing": "easeIn",
+          "once": "no",
+          "id": "AnimateWrapper-acb066a2-fdf1-4d44-a830-d7075ad03e68"
+        }
+      },
+      {
+        "type": "ProductGrid",
+        "props": {
+          "heading": "Our Products",
+          "columns": "3",
+          "maxProducts": 6,
+          "showPrice": "yes",
+          "source": "medusa",
+          "resolvedProducts": [
+            {
+              "id": "prod_01KJFWH73Z1E73WYNEBMSGJ6H7",
+              "title": "Nobel Branded Pen Set",
+              "handle": "nobel-pen-set",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Pen+Set",
+              "price": "$19.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZC7ENK9KWSGTE70M7",
+              "title": "Nobel Property Flyer Templates",
+              "handle": "nobel-flyer-templates",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Flyer+Templates",
+              "price": "$49.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZFT1N4GCFS39DPFSP",
+              "title": "Nobel Branded Polo Shirt",
+              "handle": "nobel-polo-shirt",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Polo+Shirt",
+              "price": "$39.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZGK0K8QKQG89X2ER6",
+              "title": "Nobel Branded Cap",
+              "handle": "nobel-cap",
+              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Branded+Cap",
+              "price": "$24.99"
+            },
+            {
+              "id": "prod_01KJFWH73ZHNG522APTR5S0JYN",
+              "title": "Nobel Branded Business Cards",
+              "handle": "nobel-business-cards",
+              "thumbnail": "http://localhost:9000/static/1772278671744-istockphoto-517188688-1024x1024.jpg",
+              "price": "$1.10"
+            }
+          ],
+          "id": "ProductGrid-8ded47cd-7651-41be-883d-34811a0d3bb9"
+        },
+        "readOnly": {
+          "resolvedProducts": true
+        }
+      },
+      {
+        "type": "AnimateWrapper",
+        "props": {
+          "content": [],
+          "animation": "fadeUp",
+          "duration": 4,
+          "delay": 0,
+          "easing": "easeOut",
+          "once": "yes",
+          "id": "AnimateWrapper-643d359a-2797-452d-aaa6-3000ed4017e8"
         }
       }
     ],

@@ -6,7 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Container } from "@/components/Container";
 import { fetchData } from "@/lib/fetch";
-import { getStrapiURL } from "@/lib/utils";
+import { getStrapiURL, getStrapiMedia } from "@/lib/utils";
+import { getPuckGlobals } from "@/lib/puck-globals";
 import qs from "qs";
 
 async function loader() {
@@ -158,11 +159,53 @@ function iconSelect(link: SocialLink) {
 
 export async function Footer() {
   const data = (await loader()) as FooterData;
-  if (!data || !data.Footer) return null;
-  const footer = data.Footer;
+  const puckGlobals = getPuckGlobals();
 
-  const { logoLink, colOneLinks, colTwoLinks, socialLinks, description } =
-    footer;
+  // Allow Footer to render even without Strapi data by using Puck globals or defaults
+  const footer = data?.Footer;
+
+  const logoLink = footer?.logoLink;
+  const colOneLinks = footer?.colOneLinks;
+  const colTwoLinks = footer?.colTwoLinks;
+  const socialLinks = footer?.socialLinks;
+  const description = footer?.description;
+
+  // Puck overrides (editor-managed values take priority)
+  const finalDescription = puckGlobals.footerDescription || description || "NOBEL Realty Group - Award-winning buying and selling real estate services in Florida.";
+  const finalLogoText = puckGlobals.footerLogoText || logoLink?.text || "NOBEL";
+  const finalLogoImage = puckGlobals.footerLogoImage || getStrapiMedia(logoLink?.image?.url) || "/img/logo.svg";
+  const finalLogoHref = logoLink?.href || "/";
+  
+  const finalColOneLinks = puckGlobals.footerColOneLinks && puckGlobals.footerColOneLinks.length > 0
+    ? puckGlobals.footerColOneLinks
+    : colOneLinks || [
+        { text: "Buy a Home", href: "/buy" },
+        { text: "Sell a Home", href: "/sell" },
+        { text: "Rent a Home", href: "/rent" },
+        { text: "Our Agents", href: "/agents" },
+        { text: "About Us", href: "/about" },
+      ];
+
+  const finalColTwoLinks = puckGlobals.footerColTwoLinks && puckGlobals.footerColTwoLinks.length > 0
+    ? puckGlobals.footerColTwoLinks
+    : colTwoLinks || [
+        { text: "Contact", href: "/contact" },
+        { text: "Careers", href: "/careers" },
+        { text: "Insights", href: "/insights" },
+      ];
+
+  const finalSocialHeading = puckGlobals.footerSocialHeading || socialLinks?.heading || "Follow us!";
+  const finalSocialLinks = puckGlobals.footerSocialLinks && puckGlobals.footerSocialLinks.length > 0
+    ? puckGlobals.footerSocialLinks
+    : socialLinks?.socialLink || [
+        { text: "Facebook", href: "https://www.facebook.com" },
+        { text: "Instagram", href: "https://www.instagram.com" },
+        { text: "LinkedIn", href: "https://www.linkedin.com" },
+        { text: "Twitter", href: "https://www.twitter.com" },
+      ];
+
+  const finalCopyright = puckGlobals.footerCopyright || `Copyright © ${new Date().getFullYear()} NOBEL Realty Group. All rights reserved.`;
+
   return (
     <div className="relative bg-gray-50 dark:bg-gray-900">
       <Container>
@@ -170,69 +213,74 @@ export async function Footer() {
           <div className="lg:col-span-2">
             <div>
               <Link
-                href={logoLink.href}
+                href={finalLogoHref}
                 className="flex items-center space-x-2 text-2xl font-nobel-title font-medium text-nobel-blue dark:text-white"
               >
                 <Image
-                  src={logoLink.image.url}
-                  alt={logoLink.image.alternativeText || logoLink.image.name}
+                  src={finalLogoImage}
+                  alt={logoLink?.image?.alternativeText || logoLink?.image?.name || "Logo"}
                   width={32}
                   height={32}
                   className="w-8"
                 />
-                <span>{logoLink.text}</span>
+                <span>{finalLogoText}</span>
               </Link>
             </div>
 
             <div className="max-w-md mt-4 text-gray-600 dark:text-gray-400 font-nobel-content">
-              {description}
+              {finalDescription}
             </div>
           </div>
 
           <div>
             <div className="flex flex-wrap w-full -mt-2 -ml-3 lg:ml-0">
-              {colOneLinks &&
-                colOneLinks.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className="w-full px-4 py-2 text-gray-600 dark:text-gray-300 font-nobel-content rounded-md hover:text-nobel-blue dark:hover:text-white focus:text-nobel-blue focus:bg-gray-100 focus:outline-none dark:focus:bg-gray-800"
-                  >
-                    {item.text}
-                  </Link>
-                ))}
+              {finalColOneLinks.map((item: any, index: number) => (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="w-full px-4 py-2 text-gray-600 dark:text-gray-300 font-nobel-content rounded-md hover:text-nobel-blue dark:hover:text-white focus:text-nobel-blue focus:bg-gray-100 focus:outline-none dark:focus:bg-gray-800"
+                >
+                  {item.text}
+                </Link>
+              ))}
             </div>
           </div>
           <div>
             <div className="flex flex-wrap w-full -mt-2 -ml-3 lg:ml-0">
-              {colTwoLinks &&
-                colTwoLinks.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className="w-full px-4 py-2 text-gray-600 dark:text-gray-300 font-nobel-content rounded-md hover:text-nobel-blue dark:hover:text-white focus:text-nobel-blue focus:bg-gray-100 focus:outline-none dark:focus:bg-gray-800"
-                  >
-                    {item.text}
-                  </Link>
-                ))}
+              {finalColTwoLinks.map((item: any, index: number) => (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="w-full px-4 py-2 text-gray-600 dark:text-gray-300 font-nobel-content rounded-md hover:text-nobel-blue dark:hover:text-white focus:text-nobel-blue focus:bg-gray-100 focus:outline-none dark:focus:bg-gray-800"
+                >
+                  {item.text}
+                </Link>
+              ))}
             </div>
           </div>
           <div>
-            <div className="font-nobel-content-bold text-gray-900 dark:text-white">{socialLinks.heading}</div>
+            <div className="font-nobel-content-bold text-gray-900 dark:text-white">{finalSocialHeading}</div>
             <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
-              {socialLinks.socialLink &&
-                socialLinks.socialLink.map((item, index) => (
+              {finalSocialLinks.map((item: any, index: number) => {
+                // Use SocialIcon if we have original Strapi data, otherwise text links
+                const isStrapiSocial = item.id !== undefined;
+                return (
                   <div key={index}>
                     <span className="sr-only">{item.text}</span>
-                    {iconSelect(item)}
+                    {isStrapiSocial ? iconSelect(item as SocialLink) : (
+                      <a href={item.href} target="_blank" rel="noreferrer" className="hover:text-nobel-blue" title={item.text}>
+                        <SocialIcon network={item.text.toLowerCase()} url={item.href} target="_blank" />
+                      </a>
+                    )}
                   </div>
-                ))}
+                );
+              })}
             </div>
           </div>
         </div>
 
         <div className="my-10 text-sm text-center text-gray-600 dark:text-gray-400 font-nobel-content">
-          Copyright © {new Date().getFullYear()} NOBEL Realty Group. All rights reserved.
+          {finalCopyright}
         </div>
       </Container>
     </div>
