@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "@/components/Container";
-import Image from "next/image";
+import { StrapiImage } from "@/components/StrapiImage";
 
 interface CardProps {
   id: number;
@@ -46,7 +46,7 @@ function Avatar(props: CardProps) {
   return (
     <div className="flex items-center mt-8 space-x-3">
       <div className="flex-shrink-0 overflow-hidden rounded-full w-14 h-14">
-        <Image
+        <StrapiImage
           src={props.image.url}
           width={40}
           height={40}

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import React from "react";
 import { Container } from "@/components/Container";
+import { StrapiImage } from "@/components/StrapiImage";
 
 interface ContentWithImageProps {
   data: {
@@ -29,7 +29,7 @@ export function ContentWithImage({ data }: Readonly<ContentWithImageProps>) {
         }`}
       >
         <div>
-          <Image
+          <StrapiImage
             src={image.url}
             width={521}
             height={521}

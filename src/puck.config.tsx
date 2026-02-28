@@ -610,13 +610,57 @@ const HeroConfig = {
   fields: {
     heading: { type: "text" as const, contentEditable: true },
     subheading: { type: "textarea" as const, contentEditable: true },
+    bgLightDesktop: { type: "text" as const, label: "BG Light Desktop (URL)" },
+    bgLightMobile: { type: "text" as const, label: "BG Light Mobile (URL)" },
+    bgDarkDesktop: { type: "text" as const, label: "BG Dark Desktop (URL)" },
+    bgDarkMobile: { type: "text" as const, label: "BG Dark Mobile (URL)" },
+    showSearch: {
+      type: "radio" as const,
+      label: "Show Search Bar",
+      options: [
+        { label: "Yes", value: "yes" },
+        { label: "No", value: "no" },
+      ],
+    },
+    searchTabs: {
+      type: "array" as const,
+      label: "Search Tabs",
+      arrayFields: {
+        label: { type: "text" as const },
+      },
+    },
+    searchPlaceholder: { type: "text" as const, label: "Search Placeholder" },
+    searchButtonText: { type: "text" as const, label: "Search Button Text" },
   },
   defaultProps: {
     heading: "LOOKING FOR A PLACE YOU LOVE?",
     subheading: "We'll Get You There. Search Over 5 Million Homes for Sale Today",
+    bgLightDesktop: "/img/homepage-head-banner-light-mode.webp",
+    bgLightMobile: "/img/homepage-head-banner-light-mode-mobile.webp",
+    bgDarkDesktop: "/img/homepage-head-banner-dark-mode.webp",
+    bgDarkMobile: "/img/homepage-head-banner-dark-mode-mobile.webp",
+    showSearch: "yes",
+    searchTabs: [{ label: "BUY" }, { label: "RENT" }, { label: "SELL" }],
+    searchPlaceholder: "City, State, Zip Code or Neighborhood",
+    searchButtonText: "Search",
   },
-  render: ({ heading, subheading }: any) => (
-    <Hero data={{ heading, subheading }} />
+  render: ({
+    heading, subheading,
+    bgLightDesktop, bgLightMobile, bgDarkDesktop, bgDarkMobile,
+    showSearch, searchTabs, searchPlaceholder, searchButtonText,
+  }: any) => (
+    <Hero data={{
+      heading,
+      subheading,
+      bgLightDesktop,
+      bgLightMobile,
+      bgDarkDesktop,
+      bgDarkMobile,
+      showSearch: showSearch !== "no",
+      searchTabs: (searchTabs || []).map((t: any) => t.label),
+      searchPlaceholder,
+      searchButtonText,
+    }} />
   ),
 };
 

@@ -45,16 +45,18 @@ interface NavLink {
   isAuth: boolean;
 }
 
+interface NavLogoImage {
+  id: number;
+  url: string;
+  alternativeText: string | null;
+  name: string;
+}
+
 interface NavLogo {
   id: number;
   LogoText: string;
   href: string;
-  LogoImage: {
-    id: number;
-    url: string;
-    alternativeText: string | null;
-    name: string;
-  };
+  LogoImage: NavLogoImage | NavLogoImage[];
 }
 
 interface NavbarData {
@@ -102,7 +104,9 @@ export async function Navbar() {
 
   // Apply Puck global overrides (if editor has set them)
   const finalLogoText = puckGlobals.navLogoText || navLogo.LogoText;
-  const finalLogoImage = puckGlobals.navLogoImage || getStrapiMedia(navLogo.LogoImage?.url) || "/img/nobel-logo.png";
+  // LogoImage can be an array (Strapi multiple media) or a single object
+  const rawLogoImage = Array.isArray(navLogo.LogoImage) ? navLogo.LogoImage[0] : navLogo.LogoImage;
+  const finalLogoImage = puckGlobals.navLogoImage || getStrapiMedia(rawLogoImage?.url) || "/img/nobel-logo.png";
   const finalLogoHref = navLogo.href || "/";
   
   const finalNavLinks = puckGlobals.navLinks && puckGlobals.navLinks.length > 0
@@ -133,8 +137,8 @@ export async function Navbar() {
             href: finalLogoHref,
             image: {
               url: finalLogoImage,
-              alternativeText: navLogo.LogoImage?.alternativeText,
-              name: navLogo.LogoImage?.name
+              alternativeText: rawLogoImage?.alternativeText ?? null,
+              name: rawLogoImage?.name ?? "logo"
             }
           },
           link: finalNavLinks.map(link => ({

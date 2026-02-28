@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { Container } from "@/components/Container";
+import { StrapiImage } from "@/components/StrapiImage";
 
 import { CheckIcon } from "@heroicons/react/20/solid";
 
@@ -46,7 +46,7 @@ export function Benefits({ data }: BenefitProps) {
         }`}
       >
         <div>
-          <Image
+          <StrapiImage
             src={image?.url}
             width={521}
             height={521}

@@ -2,8 +2,8 @@ import Image from "next/image";
 import { getStrapiMedia } from "@/lib/utils";
 
 interface StrapiImageProps {
-  src: string;
-  alt: string;
+  src: string | null | undefined;
+  alt: string | null | undefined;
   height: number;
   width: number;
   className?: string;
@@ -23,7 +23,7 @@ export function StrapiImage({
   return (
     <Image
       src={imageUrl ?? imageFallback}
-      alt={alt}
+      alt={alt ?? ""}
       height={height}
       width={width}
       className={className}
