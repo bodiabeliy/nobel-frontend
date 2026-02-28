@@ -14,6 +14,7 @@ import { ProductGridClient } from "@/components/ProductGridClient";
 import { AnimateWrapper, ANIMATION_OPTIONS, EASING_OPTIONS } from "@/components/AnimateWrapper";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ImageCarousel } from "@/components/ImageCarousel";
+import { ImageUploadField } from "@/components/ImageUploadField";
 
 // ─── Spacing options ──────────────────────────────────────────────
 const spacingOptions = [
@@ -610,10 +611,34 @@ const HeroConfig = {
   fields: {
     heading: { type: "text" as const, contentEditable: true },
     subheading: { type: "textarea" as const, contentEditable: true },
-    bgLightDesktop: { type: "text" as const, label: "BG Light Desktop (URL)" },
-    bgLightMobile: { type: "text" as const, label: "BG Light Mobile (URL)" },
-    bgDarkDesktop: { type: "text" as const, label: "BG Dark Desktop (URL)" },
-    bgDarkMobile: { type: "text" as const, label: "BG Dark Mobile (URL)" },
+    bgLightDesktop: {
+      type: "custom" as const,
+      label: "BG Light Desktop",
+      render: ({ value, onChange }: any) => (
+        <ImageUploadField value={value} onChange={onChange} />
+      ),
+    },
+    bgLightMobile: {
+      type: "custom" as const,
+      label: "BG Light Mobile",
+      render: ({ value, onChange }: any) => (
+        <ImageUploadField value={value} onChange={onChange} />
+      ),
+    },
+    bgDarkDesktop: {
+      type: "custom" as const,
+      label: "BG Dark Desktop",
+      render: ({ value, onChange }: any) => (
+        <ImageUploadField value={value} onChange={onChange} />
+      ),
+    },
+    bgDarkMobile: {
+      type: "custom" as const,
+      label: "BG Dark Mobile",
+      render: ({ value, onChange }: any) => (
+        <ImageUploadField value={value} onChange={onChange} />
+      ),
+    },
     showSearch: {
       type: "radio" as const,
       label: "Show Search Bar",

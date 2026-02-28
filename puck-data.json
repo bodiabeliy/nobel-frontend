@@ -31,46 +31,13 @@
         }
       },
       {
-        "type": "CounterRow",
-        "props": {
-          "counters": [
-            {
-              "end": 500,
-              "prefix": "",
-              "suffix": "+",
-              "label": "Properties Sold"
-            },
-            {
-              "end": 98,
-              "prefix": "",
-              "suffix": "%",
-              "label": "Client Satisfaction"
-            },
-            {
-              "end": 40,
-              "prefix": "",
-              "suffix": "+",
-              "label": "Years Experience"
-            },
-            {
-              "end": 25,
-              "prefix": "$",
-              "suffix": "M",
-              "label": "Total Sales"
-            }
-          ],
-          "columns": "4",
-          "duration": 2.5,
-          "bgColor": "white",
-          "id": "CounterRow-fddfe49d-8674-4443-b8a2-4588f9af8c1f"
-        }
-      },
-      {
         "type": "Hero",
         "props": {
           "heading": "LOOKING FOR A PLACE YOU LOVE?",
           "subheading": "We'll Get You There. Search Over 5 Million Homes for Sale Today",
-          "id": "Hero-14134640-5342-4d3a-83cc-fd133ad44c45"
+          "id": "Hero-14134640-5342-4d3a-83cc-fd133ad44c45",
+          "showSearch": "yes",
+          "bgLightDesktop": "/uploads/1772288323444-istockphoto-517188688-1024x1024.jpg"
         }
       },
       {
@@ -130,6 +97,41 @@
         },
         "readOnly": {
           "resolvedProducts": true
+        }
+      },
+      {
+        "type": "CounterRow",
+        "props": {
+          "counters": [
+            {
+              "end": 500,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Properties Sold"
+            },
+            {
+              "end": 98,
+              "prefix": "",
+              "suffix": "%",
+              "label": "Client Satisfaction"
+            },
+            {
+              "end": 40,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Years Experience"
+            },
+            {
+              "end": 25,
+              "prefix": "$",
+              "suffix": "M",
+              "label": "Total Sales"
+            }
+          ],
+          "columns": "4",
+          "duration": 2.5,
+          "bgColor": "white",
+          "id": "CounterRow-fddfe49d-8674-4443-b8a2-4588f9af8c1f"
         }
       },
       {
