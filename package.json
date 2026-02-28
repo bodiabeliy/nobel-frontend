@@ -19,7 +19,9 @@
     "react": "^19.0.0-rc-04bd67a4-20240924",
     "react-dom": "^19.0.0-rc-04bd67a4-20240924",
     "react-hook-form": "^7.51.4",
-    "react-social-icons": "^6.16.0"
+    "react-social-icons": "^6.16.0",
+    "@medusajs/js-sdk": "latest",
+    "@medusajs/types": "latest"
   },
   "devDependencies": {
     "@types/node": "^20",

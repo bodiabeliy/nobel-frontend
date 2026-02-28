@@ -7,6 +7,17 @@
     },
     "content": [
       {
+        "type": "ProductGrid",
+        "props": {
+          "heading": "Our Products",
+          "columns": "3",
+          "maxProducts": 6,
+          "showPrice": "yes",
+          "source": "strapi",
+          "id": "ProductGrid-10bc9a3c-e7d8-42bb-a7af-7202968e04c4"
+        }
+      },
+      {
         "type": "Hero",
         "props": {
           "heading": "LOOKING FOR A PLACE YOU LOVE?",

@@ -812,6 +812,407 @@ const ContactSectionConfig = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// STORE / MEDUSA COMPONENTS (Puck drag-and-drop elements)
+// ═══════════════════════════════════════════════════════════════════
+
+function formatProductPrice(variants: any[]): string {
+  if (!variants?.length) return "Price TBD";
+  let cheapest: number | null = null;
+  let currencyCode = "usd";
+  for (const variant of variants) {
+    const amt = variant.calculated_price?.calculated_amount;
+    const code = variant.calculated_price?.currency_code;
+    if (amt != null && (cheapest === null || amt < cheapest)) {
+      cheapest = amt;
+      currencyCode = code || "usd";
+    }
+    // fallback to prices array
+    for (const price of variant.prices || []) {
+      if (price.amount != null && (cheapest === null || price.amount < cheapest)) {
+        cheapest = price.amount;
+        currencyCode = price.currency_code || "usd";
+      }
+    }
+  }
+  if (cheapest === null) return "Price TBD";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencyCode.toUpperCase(),
+  }).format(cheapest / 100);
+}
+
+const ProductGridConfig = {
+  label: "Product Grid",
+  fields: {
+    heading: { type: "text" as const, label: "Heading" },
+    columns: {
+      type: "select" as const,
+      label: "Columns",
+      options: [
+        { label: "2 Columns", value: "2" },
+        { label: "3 Columns", value: "3" },
+        { label: "4 Columns", value: "4" },
+      ],
+    },
+    maxProducts: {
+      type: "number" as const,
+      label: "Max Products",
+      min: 1,
+      max: 50,
+    },
+    showPrice: { type: "radio" as const, label: "Show Price", options: [{ label: "Yes", value: "yes" }, { label: "No", value: "no" }] },
+    source: {
+      type: "select" as const,
+      label: "Data Source",
+      options: [
+        { label: "Medusa (live)", value: "medusa" },
+        { label: "Strapi (synced)", value: "strapi" },
+      ],
+    },
+    resolvedProducts: { type: "custom" as const, label: " ", render: () => null },
+  },
+  defaultProps: {
+    heading: "Our Products",
+    columns: "3",
+    maxProducts: 6,
+    showPrice: "yes",
+    source: "medusa",
+    resolvedProducts: [] as any[],
+  },
+  resolveData: async ({ props }: any) => {
+    const maxProducts = props.maxProducts || 6;
+    const source = props.source || "medusa";
+    let products: any[] = [];
+
+    if (source === "medusa") {
+      try {
+        const medusaUrl =
+          process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+        const publishableKey =
+          process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+        if (publishableKey) {
+          headers["x-publishable-api-key"] = publishableKey;
+        }
+
+        // Get the first region for pricing context
+        let regionId = "";
+        try {
+          const regRes = await fetch(`${medusaUrl}/store/regions`, { headers });
+          if (regRes.ok) {
+            const regData = await regRes.json();
+            regionId = regData.regions?.[0]?.id || "";
+          }
+        } catch { /* ignore */ }
+
+        const params = new URLSearchParams({
+          limit: String(maxProducts),
+          fields: "+variants.calculated_price",
+        });
+        if (regionId) params.set("region_id", regionId);
+
+        const res = await fetch(
+          `${medusaUrl}/store/products?${params.toString()}`,
+          { headers }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          products = (data.products || []).map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            handle: p.handle,
+            thumbnail: p.thumbnail || p.images?.[0]?.url || "",
+            price: formatProductPrice(p.variants),
+          }));
+        }
+      } catch (e) {
+        console.warn("[ProductGrid] Medusa fetch failed:", e);
+      }
+    } else {
+      try {
+        const strapiUrl =
+          process.env.NEXT_PUBLIC_STRAPI_BASE_URL || "http://localhost:1337";
+        const res = await fetch(
+          `${strapiUrl}/api/medusa-products?pagination[pageSize]=${maxProducts}&sort=createdAt:desc`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          products = (data.data || []).map((item: any) => ({
+            id: item.medusa_id || item.id,
+            title: item.title,
+            handle: item.handle,
+            thumbnail: item.thumbnail || "",
+            price: item.variants?.[0]?.prices?.[0]
+              ? `$${(item.variants[0].prices[0].amount / 100).toFixed(2)}`
+              : "Price TBD",
+          }));
+        }
+      } catch (e) {
+        console.warn("[ProductGrid] Strapi fetch failed:", e);
+      }
+    }
+
+    return {
+      props: { ...props, resolvedProducts: products },
+      readOnly: { resolvedProducts: true },
+    };
+  },
+  render: ({ heading, columns, maxProducts, showPrice, source, resolvedProducts }: any) => {
+    const products: any[] = resolvedProducts || [];
+    const count = Math.min(maxProducts || 6, 12);
+
+    return (
+      <div className="py-12 bg-white dark:bg-gray-900">
+        <div className="container mx-auto px-4 max-w-[1280px]">
+          {heading && (
+            <h2 className="text-2xl md:text-3xl font-nobel-title font-bold text-gray-900 dark:text-white uppercase mb-8 text-center">
+              {heading}
+            </h2>
+          )}
+          <div
+            className={`grid gap-6 ${
+              columns === "2"
+                ? "grid-cols-1 sm:grid-cols-2"
+                : columns === "4"
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
+            {products.length > 0
+              ? products.slice(0, count).map((product: any, i: number) => (
+                  <a
+                    key={product.id || i}
+                    href={product.handle ? `/store/${product.handle}` : "#"}
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
+                  >
+                    <div className="aspect-square bg-gray-100 dark:bg-gray-700 relative overflow-hidden">
+                      {product.thumbnail ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={product.thumbnail}
+                          alt={product.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-gray-400">
+                          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm font-bold font-nobel-title text-gray-900 dark:text-white uppercase mb-1 truncate">
+                        {product.title}
+                      </h3>
+                      {showPrice === "yes" && product.price && (
+                        <p className="text-base font-bold text-nobel-blue dark:text-blue-400">
+                          {product.price}
+                        </p>
+                      )}
+                    </div>
+                  </a>
+                ))
+              : Array.from({ length: count }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm"
+                  >
+                    <div className="aspect-square bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+                      <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                    </div>
+                    <div className="p-4">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-2 animate-pulse" />
+                      {showPrice === "yes" && (
+                        <div className="h-4 bg-blue-100 dark:bg-blue-900/30 rounded w-1/4 animate-pulse" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+          </div>
+          <p className="text-center text-xs text-gray-400 mt-4">
+            Source: {source}{products.length > 0 ? ` | ${products.length} products loaded` : " | Loading..."}
+          </p>
+        </div>
+      </div>
+    );
+  },
+};
+
+const ProductCardConfig = {
+  label: "Product Card",
+  fields: {
+    title: { type: "text" as const, label: "Product Title", contentEditable: true },
+    price: { type: "text" as const, label: "Price" },
+    imageUrl: { type: "text" as const, label: "Image URL" },
+    handle: { type: "text" as const, label: "Product Slug (handle)" },
+    showButton: { type: "radio" as const, label: "Show Button", options: [{ label: "Yes", value: "yes" }, { label: "No", value: "no" }] },
+    buttonText: { type: "text" as const, label: "Button Text" },
+  },
+  defaultProps: {
+    title: "Product Name",
+    price: "$29.99",
+    imageUrl: "",
+    handle: "",
+    showButton: "yes",
+    buttonText: "View Product",
+  },
+  render: ({ title, price, imageUrl, handle, showButton, buttonText }: any) => (
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm max-w-sm mx-auto">
+      <div className="aspect-square bg-gray-100 dark:bg-gray-700 relative overflow-hidden">
+        {imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        ) : (
+          <div className="flex items-center justify-center h-full text-gray-400">
+            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+        )}
+      </div>
+      <div className="p-4">
+        <h3 className="text-sm font-bold font-nobel-title text-gray-900 dark:text-white uppercase mb-1">
+          {title}
+        </h3>
+        {price && (
+          <p className="text-base font-bold text-nobel-blue dark:text-blue-400 mb-3">
+            {price}
+          </p>
+        )}
+        {showButton === "yes" && (
+          <a
+            href={handle ? `/store/${handle}` : "#"}
+            className="block text-center px-4 py-2 bg-nobel-blue hover:bg-nobel-blue/90 text-white rounded font-nobel-content text-sm font-bold transition-colors"
+          >
+            {buttonText || "View Product"}
+          </a>
+        )}
+      </div>
+    </div>
+  ),
+};
+
+const StoreBannerConfig = {
+  label: "Store Banner",
+  fields: {
+    heading: { type: "text" as const, contentEditable: true },
+    subheading: { type: "textarea" as const, contentEditable: true },
+    bgColor: { type: "text" as const, label: "Background Color (Tailwind class)" },
+    ctaText: { type: "text" as const, label: "CTA Button Text" },
+    ctaLink: { type: "text" as const, label: "CTA Link" },
+  },
+  defaultProps: {
+    heading: "Nobel Store",
+    subheading: "Professional essentials for Nobel Realty Group agents",
+    bgColor: "bg-nobel-blue",
+    ctaText: "Shop Now",
+    ctaLink: "/store",
+  },
+  render: ({ heading, subheading, bgColor, ctaText, ctaLink }: any) => (
+    <div className={`${bgColor || "bg-nobel-blue"} text-white py-12 md:py-16`}>
+      <div className="container mx-auto px-4 max-w-[1280px] text-center">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-nobel-title font-bold uppercase mb-4">
+          {heading}
+        </h2>
+        {subheading && (
+          <p className="text-lg md:text-xl opacity-90 font-nobel-content max-w-2xl mx-auto mb-6">
+            {subheading}
+          </p>
+        )}
+        {ctaText && (
+          <a
+            href={ctaLink || "/store"}
+            className="inline-block px-8 py-3 bg-white text-nobel-blue hover:bg-gray-100 rounded font-nobel-content font-bold transition-colors"
+          >
+            {ctaText}
+          </a>
+        )}
+      </div>
+    </div>
+  ),
+};
+
+const CategoryGridConfig = {
+  label: "Category Grid",
+  fields: {
+    heading: { type: "text" as const, contentEditable: true },
+    categories: {
+      type: "array" as const,
+      label: "Categories",
+      arrayFields: {
+        name: { type: "text" as const },
+        href: { type: "text" as const },
+        imageUrl: { type: "text" as const },
+      },
+    },
+    columns: {
+      type: "select" as const,
+      label: "Columns",
+      options: [
+        { label: "2 Columns", value: "2" },
+        { label: "3 Columns", value: "3" },
+        { label: "4 Columns", value: "4" },
+      ],
+    },
+  },
+  defaultProps: {
+    heading: "Shop by Category",
+    categories: [
+      { name: "Business Essentials", href: "/store?category=business-essentials", imageUrl: "" },
+      { name: "Branded Apparel", href: "/store?category=branded-apparel", imageUrl: "" },
+      { name: "Marketing Materials", href: "/store?category=marketing-materials", imageUrl: "" },
+      { name: "Office Supplies", href: "/store?category=office-supplies", imageUrl: "" },
+    ],
+    columns: "4",
+  },
+  render: ({ heading, categories, columns }: any) => (
+    <div className="py-12 bg-gray-50 dark:bg-gray-800">
+      <div className="container mx-auto px-4 max-w-[1280px]">
+        {heading && (
+          <h2 className="text-2xl md:text-3xl font-nobel-title font-bold text-gray-900 dark:text-white uppercase mb-8 text-center">
+            {heading}
+          </h2>
+        )}
+        <div
+          className={`grid gap-6 ${
+            columns === "2"
+              ? "grid-cols-1 sm:grid-cols-2"
+              : columns === "3"
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          }`}
+        >
+          {(categories || []).map((cat: any, i: number) => (
+            <a
+              key={i}
+              href={cat.href || "#"}
+              className="group relative rounded-lg overflow-hidden aspect-[4/3] bg-gray-200 dark:bg-gray-700"
+            >
+              {cat.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-nobel-blue/80 to-nobel-blue/40 dark:from-blue-900/80 dark:to-blue-800/40" />
+              )}
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-end">
+                <span className="w-full text-center py-4 text-white font-nobel-title font-bold text-lg uppercase">
+                  {cat.name}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+// ═══════════════════════════════════════════════════════════════════
 // CONFIG EXPORT
 // ═══════════════════════════════════════════════════════════════════
 
@@ -852,6 +1253,15 @@ const config: Config = {
         "ContactSection",
       ],
     },
+    store: {
+      title: "Store / E-Commerce",
+      components: [
+        "StoreBanner",
+        "ProductGrid",
+        "ProductCard",
+        "CategoryGrid",
+      ],
+    },
   },
   components: {
     // Layout
@@ -884,6 +1294,12 @@ const config: Config = {
     MarketsSection: MarketsSectionConfig as any,
     WhyJoinSection: WhyJoinSectionConfig as any,
     ContactSection: ContactSectionConfig as any,
+
+    // Store / E-Commerce
+    StoreBanner: StoreBannerConfig as any,
+    ProductGrid: ProductGridConfig as any,
+    ProductCard: ProductCardConfig as any,
+    CategoryGrid: CategoryGridConfig as any,
   },
 };
 
