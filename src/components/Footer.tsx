@@ -261,18 +261,17 @@ export async function Footer() {
           <div>
             <div className="font-nobel-content-bold text-gray-900 dark:text-white">{finalSocialHeading}</div>
             <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
-              {finalSocialLinks.map((item: any, index: number) => {
-                // Use SocialIcon if we have original Strapi data, otherwise text links
-                const isStrapiSocial = item.id !== undefined;
-                return (
+              {finalSocialLinks.map((item: any, index: number) => (
                   <div key={index}>
                     <span className="sr-only">{item.text}</span>
-                    {isStrapiSocial ? iconSelect(item as SocialLink) : (
-                      <a href={item.href} target="_blank" rel="noreferrer" className="hover:text-nobel-blue" title={item.text}>
-                        <SocialIcon network={item.text.toLowerCase()} url={item.href} target="_blank" />
-                      </a>
-                    )}
+                    <SocialIcon
+                      network={item.text.toLowerCase()}
+                      url={item.href}
+                      target="_blank"
+                      style={{ height: 35, width: 35 }}
+                    />
                   </div>
+              ))}
                 );
               })}
             </div>

@@ -92,6 +92,13 @@
               "handle": "nobel-business-cards",
               "thumbnail": "http://localhost:9000/static/1772278671744-istockphoto-517188688-1024x1024.jpg",
               "price": "$1.10"
+            },
+            {
+              "id": "prod_01KJJF1J0SP4YWJPQTMVPS1PRS",
+              "title": "sweater",
+              "handle": "sweater",
+              "thumbnail": "http://localhost:9000/static/1772293769207-jmc-skiddaw-jumper.webp",
+              "price": "$1.00"
             }
           ]
         },
