@@ -361,7 +361,7 @@ export default function EditorPage() {
         // Optionally redirect to the published page
         // router.push(path);
       } else {
-        alert("Failed to publish page");
+        alert("Failed to publish page", );
       }
     } catch (error) {
       console.error("Error publishing:", error);

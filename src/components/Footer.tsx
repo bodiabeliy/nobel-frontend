@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Container } from "@/components/Container";
 import { fetchData } from "@/lib/fetch";
-import { getStrapiURL, getStrapiMedia } from "@/lib/utils";
+import { getStrapiURL, getStrapiMedia, getStrapiToken } from "@/lib/utils";
 import { getPuckGlobals } from "@/lib/puck-globals";
 import qs from "qs";
 
@@ -37,7 +37,7 @@ async function loader() {
   const url = `${baseUrl}/api/home-main-section?${query}`;
   
   try {
-    const data = await fetchData(url);
+    const data = await fetchData(url, getStrapiToken());
     return data;
   } catch (error) {
     console.error("Error loading footer data:", error);
@@ -159,7 +159,7 @@ function iconSelect(link: SocialLink) {
 
 export async function Footer() {
   const data = (await loader()) as FooterData;
-  const puckGlobals = getPuckGlobals();
+  const puckGlobals = await getPuckGlobals();
 
   // Allow Footer to render even without Strapi data by using Puck globals or defaults
   const footer = data?.Footer;

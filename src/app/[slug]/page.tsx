@@ -1,7 +1,5 @@
 import React from "react";
 import type { PageProps } from "@/types";
-import fs from "fs";
-import path from "path";
 import type { Data } from "@puckeditor/core";
 
 import { Container } from "@/components/Container";
@@ -11,20 +9,53 @@ import { PuckRenderer } from "@/components/PuckRenderer";
 // All slugs that can be edited in Puck
 const EDITABLE_SLUGS = ["buy", "rent", "sell", "agents", "contact"];
 
+function getStrapiURL() {
+  return process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
+}
+
+function getStrapiToken() {
+  return process.env.STRAPI_API_TOKEN ?? "";
+}
+
 async function loadPuckData(slug: string): Promise<Data | null> {
+  const pagePath = `/${slug}`;
+
+  // 1. Try Strapi puck-pages collection
   try {
+    const base = getStrapiURL();
+    const token = getStrapiToken();
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(
+      `${base}/api/puck-pages?filters[path][$eq]=${encodeURIComponent(pagePath)}`,
+      { headers, next: { revalidate: 60 } }
+    );
+    if (res.ok) {
+      const json = await res.json();
+      const entry = json.data?.[0];
+      if (entry?.data?.content?.length > 0) {
+        return entry.data as Data;
+      }
+    }
+  } catch (e) {
+    console.error("Strapi puck-page fetch failed for slug:", slug, e);
+  }
+
+  // 2. Fallback to local file (works in dev)
+  try {
+    const fs = require("fs");
+    const path = require("path");
     const dataFilePath = path.join(process.cwd(), "puck-data.json");
     if (fs.existsSync(dataFilePath)) {
-      const fileContent = fs.readFileSync(dataFilePath, "utf-8");
-      const allData = JSON.parse(fileContent);
-      const pageData = allData[`/${slug}`];
-      if (pageData && pageData.content && pageData.content.length > 0) {
+      const allData = JSON.parse(fs.readFileSync(dataFilePath, "utf-8"));
+      const pageData = allData[pagePath];
+      if (pageData?.content?.length > 0) {
         return pageData;
       }
     }
-  } catch (error) {
-    console.error("Error loading Puck data for slug:", slug, error);
-  }
+  } catch (_) { /* no local file — fine on Vercel */ }
+
   return null;
 }
 

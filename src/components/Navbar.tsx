@@ -2,7 +2,7 @@ import Link from "next/link";
 import ThemeChanger from "./DarkSwitch";
 import { DisclosureClient } from "@/components/DisclosureClient";
 import { fetchData } from "@/lib/fetch";
-import { getStrapiURL, getStrapiMedia } from "@/lib/utils";
+import { getStrapiURL, getStrapiMedia, getStrapiToken } from "@/lib/utils";
 import { getPuckGlobals } from "@/lib/puck-globals";
 import qs from "qs";
 
@@ -30,7 +30,7 @@ async function loader() {
   const url = `${baseUrl}/api/home-main-section?${query}`;
   
   try {
-    const data = await fetchData(url);
+    const data = await fetchData(url, getStrapiToken());
     return data;
   } catch (error) {
     console.error("Error loading navbar data:", error);
@@ -70,7 +70,7 @@ interface NavbarData {
 
 export async function Navbar() {
   const data = await loader() as NavbarData;
-  const puckGlobals = getPuckGlobals();
+  const puckGlobals = await getPuckGlobals();
   
   // Fallback data if Strapi is not available
   const fallbackData = {

@@ -57,50 +57,7 @@
           "showPrice": "yes",
           "source": "medusa",
           "id": "ProductGrid-10bc9a3c-e7d8-42bb-a7af-7202968e04c4",
-          "resolvedProducts": [
-            {
-              "id": "prod_01KJFWH73Z1E73WYNEBMSGJ6H7",
-              "title": "Nobel Branded Pen Set",
-              "handle": "nobel-pen-set",
-              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Pen+Set",
-              "price": "$19.99"
-            },
-            {
-              "id": "prod_01KJFWH73ZC7ENK9KWSGTE70M7",
-              "title": "Nobel Property Flyer Templates",
-              "handle": "nobel-flyer-templates",
-              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Flyer+Templates",
-              "price": "$49.99"
-            },
-            {
-              "id": "prod_01KJFWH73ZFT1N4GCFS39DPFSP",
-              "title": "Nobel Branded Polo Shirt",
-              "handle": "nobel-polo-shirt",
-              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Polo+Shirt",
-              "price": "$39.99"
-            },
-            {
-              "id": "prod_01KJFWH73ZGK0K8QKQG89X2ER6",
-              "title": "Nobel Branded Cap",
-              "handle": "nobel-cap",
-              "thumbnail": "https://placehold.co/600x400/1a365d/ffffff?text=Branded+Cap",
-              "price": "$24.99"
-            },
-            {
-              "id": "prod_01KJFWH73ZHNG522APTR5S0JYN",
-              "title": "Nobel Branded Business Cards",
-              "handle": "nobel-business-cards",
-              "thumbnail": "http://localhost:9000/static/1772278671744-istockphoto-517188688-1024x1024.jpg",
-              "price": "$1.10"
-            },
-            {
-              "id": "prod_01KJJF1J0SP4YWJPQTMVPS1PRS",
-              "title": "sweater",
-              "handle": "sweater",
-              "thumbnail": "http://localhost:9000/static/1772293769207-jmc-skiddaw-jumper.webp",
-              "price": "$1.00"
-            }
-          ]
+          "resolvedProducts": []
         },
         "readOnly": {
           "resolvedProducts": true

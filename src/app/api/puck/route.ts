@@ -1,92 +1,168 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
-const DATA_FILE_PATH = path.join(process.cwd(), "puck-data.json");
+/**
+ * Puck page data API — stores/retrieves editor data via Strapi.
+ *
+ * Strapi collection: puck-page  (fields: path, data)
+ * Falls back to local puck-data.json for local dev without Strapi.
+ */
 
-// Initialize data file if it doesn't exist
-function initializeDataFile() {
-  if (!fs.existsSync(DATA_FILE_PATH)) {
-    fs.writeFileSync(
-      DATA_FILE_PATH,
-      JSON.stringify(
-        {
-          "/": {
-            content: [],
-            root: {},
-          },
-        },
-        null,
-        2
-      )
-    );
+function getStrapiURL() {
+  return process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
+}
+
+function getStrapiToken() {
+  return process.env.STRAPI_API_TOKEN ?? "";
+}
+
+function strapiHeaders(): Record<string, string> {
+  const h: Record<string, string> = { "Content-Type": "application/json" };
+  const token = getStrapiToken();
+  if (token) h["Authorization"] = `Bearer ${token}`;
+  return h;
+}
+
+// ─── helpers to talk to Strapi puck-page collection ──────────────
+
+async function findPuckPage(pagePath: string) {
+  const base = getStrapiURL();
+  const url = `${base}/api/puck-pages?filters[path][$eq]=${encodeURIComponent(pagePath)}`;
+  try {
+    const res = await fetch(url, { headers: strapiHeaders(), cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const entry = json.data?.[0];
+    if (!entry) return null;
+    // Strapi v5: fields are directly on the entry object
+    return { id: entry.documentId ?? entry.id, data: entry.data };
+  } catch (e) {
+    console.error("[Puck API] Error finding puck page in Strapi:", e);
+    return null;
   }
 }
 
-// GET - Load Puck data for a specific path
+async function createPuckPage(pagePath: string, data: any) {
+  const base = getStrapiURL();
+  const url = `${base}/api/puck-pages`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: strapiHeaders(),
+    body: JSON.stringify({ data: { path: pagePath, data } }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Strapi create failed (${res.status}): ${text}`);
+  }
+  return res.json();
+}
+
+async function updatePuckPage(documentId: string | number, data: any) {
+  const base = getStrapiURL();
+  const url = `${base}/api/puck-pages/${documentId}`;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: strapiHeaders(),
+    body: JSON.stringify({ data: { data } }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Strapi update failed (${res.status}): ${text}`);
+  }
+  return res.json();
+}
+
+// ─── Fallback: local filesystem (for local dev) ─────────────────
+
+function readLocalData(pagePath: string) {
+  try {
+    const fs = require("fs");
+    const pathModule = require("path");
+    const filePath = pathModule.join(process.cwd(), "puck-data.json");
+    if (!fs.existsSync(filePath)) return null;
+    const content = fs.readFileSync(filePath, "utf-8");
+    const allData = JSON.parse(content);
+    return allData[pagePath] || null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalData(pagePath: string, data: any) {
+  try {
+    const fs = require("fs");
+    const pathModule = require("path");
+    const filePath = pathModule.join(process.cwd(), "puck-data.json");
+    let allData: Record<string, any> = {};
+    if (fs.existsSync(filePath)) {
+      allData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    }
+    allData[pagePath] = data;
+    fs.writeFileSync(filePath, JSON.stringify(allData, null, 2));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ─── Route handlers ─────────────────────────────────────────────
+
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const pagePath = searchParams.get("path") || "/";
+
   try {
-    console.log('[Puck API] GET request received');
-    initializeDataFile();
-    
-    const { searchParams } = new URL(request.url);
-    const path = searchParams.get("path") || "/";
-    console.log('[Puck API] Loading data for path:', path);
+    // Try Strapi first
+    const entry = await findPuckPage(pagePath);
+    if (entry?.data) {
+      return NextResponse.json(entry.data);
+    }
 
-    const fileContent = fs.readFileSync(DATA_FILE_PATH, "utf-8");
-    const allData = JSON.parse(fileContent);
+    // Fallback to local file (dev only)
+    const local = readLocalData(pagePath);
+    if (local) {
+      return NextResponse.json(local);
+    }
 
-    const data = allData[path] || {
-      content: [],
-      root: {},
-    };
-
-    console.log('[Puck API] Returning data:', data.content?.length || 0, 'items');
-    return NextResponse.json(data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    // Nothing found
+    return NextResponse.json({ content: [], root: {} });
   } catch (error) {
-    console.error("[Puck API] Error loading Puck data:", error);
-    // Return empty data instead of error to allow editor to work
-    return NextResponse.json(
-      {
-        content: [],
-        root: {},
-      },
-      { 
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    console.error("[Puck API] GET error:", error);
+    return NextResponse.json({ content: [], root: {} });
   }
 }
 
-// POST - Save Puck data for a specific path
 export async function POST(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const pagePath = searchParams.get("path") || "/";
+
   try {
-    initializeDataFile();
-    
-    const { searchParams } = new URL(request.url);
-    const path = searchParams.get("path") || "/";
     const data = await request.json();
 
-    const fileContent = fs.readFileSync(DATA_FILE_PATH, "utf-8");
-    const allData = JSON.parse(fileContent);
+    // Try Strapi first
+    try {
+      const existing = await findPuckPage(pagePath);
+      if (existing) {
+        await updatePuckPage(existing.id, data);
+      } else {
+        await createPuckPage(pagePath, data);
+      }
+      return NextResponse.json({ success: true });
+    } catch (strapiErr) {
+      console.error("[Puck API] Strapi save failed, trying local:", strapiErr);
+    }
 
-    allData[path] = data;
+    // Fallback: local filesystem (only works in dev)
+    const wrote = writeLocalData(pagePath, data);
+    if (wrote) {
+      return NextResponse.json({ success: true });
+    }
 
-    fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(allData, null, 2));
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error saving Puck data:", error);
     return NextResponse.json(
-      { error: "Failed to save data" },
+      { error: "Failed to save — Strapi unavailable and filesystem is read-only" },
       { status: 500 }
     );
+  } catch (error) {
+    console.error("[Puck API] POST error:", error);
+    return NextResponse.json({ error: "Failed to save data" }, { status: 500 });
   }
 }

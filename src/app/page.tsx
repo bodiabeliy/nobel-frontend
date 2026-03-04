@@ -13,28 +13,48 @@ import { EditorAccessButton } from "@/components/EditorAccessButton";
 import { PuckRenderer } from "@/components/PuckRenderer";
 import { SiteLayout } from "@/components/SiteLayout";
 import { fetchData } from "@/lib/fetch";
-import { getStrapiURL } from "@/lib/utils";
+import { getStrapiURL, getStrapiToken } from "@/lib/utils";
 import qs from "qs";
 import type { Data } from "@puckeditor/core";
-import fs from "fs";
-import path from "path";
 
-// Load Puck data
+// Load Puck data — Strapi first, local file fallback
 async function loadPuckData(): Promise<Data | null> {
+  // 1. Try Strapi puck-pages collection
   try {
+    const base = getStrapiURL();
+    const token = getStrapiToken();
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch(
+      `${base}/api/puck-pages?filters[path][$eq]=${encodeURIComponent("/")}`,
+      { headers, next: { revalidate: 60 } }
+    );
+    if (res.ok) {
+      const json = await res.json();
+      const entry = json.data?.[0];
+      if (entry?.data?.content?.length > 0) {
+        return entry.data as Data;
+      }
+    }
+  } catch (e) {
+    console.error("Strapi puck-page fetch failed:", e);
+  }
+
+  // 2. Fallback to local file (works in dev)
+  try {
+    const fs = require("fs");
+    const path = require("path");
     const dataFilePath = path.join(process.cwd(), "puck-data.json");
     if (fs.existsSync(dataFilePath)) {
-      const fileContent = fs.readFileSync(dataFilePath, "utf-8");
-      const allData = JSON.parse(fileContent);
+      const allData = JSON.parse(fs.readFileSync(dataFilePath, "utf-8"));
       const pageData = allData["/"];
-      // Only return data if it has content
-      if (pageData && pageData.content && pageData.content.length > 0) {
+      if (pageData?.content?.length > 0) {
         return pageData;
       }
     }
-  } catch (error) {
-    console.error("Error loading Puck data:", error);
-  }
+  } catch (_) { /* no local file — fine on Vercel */ }
+
   return null;
 }
 
@@ -104,7 +124,7 @@ async function loader() {
   const url = `${baseUrl}/api/home-main-section?${query}`;
   
   try {
-    const data = await fetchData(url);
+    const data = await fetchData(url, getStrapiToken());
     return data;
   } catch (error) {
     console.error("Error loading home page data:", error);
